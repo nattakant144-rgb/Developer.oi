@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GHB ALL GEN — ต้นแบบฟังก์ชันใหม่ 10 รายการ</title>
+<meta name="description" content="ต้นแบบเชิงโต้ตอบ (Interactive Prototype) ของฟังก์ชันใหม่ 10 รายการที่เสนอสำหรับแอปพลิเคชัน GHB ALL GEN พร้อมคำอธิบายตำแหน่งในแอปและแนวทาง UX/UI">
+<meta name="theme-color" content="#E36F0C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#E36F0C;--brand-600:#B95805;--brand-50:#FFF4EA;--brand-100:#FFE2C7;
+  --ink:#1C2430;--ink-2:#3B4553;--muted:#667080;--line:#E4E6EA;
+  --bg:#F6F5F2;--surface:#FFFFFF;--navy:#15243A;
+  --ok:#157347;--ok-50:#E6F4EC;--warn:#8F5200;--warn-50:#FFF4D6;--bad:#B42318;--bad-50:#FDECEA;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 10px 30px rgba(16,24,40,.07);
+}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:'IBM Plex Sans Thai',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:var(--brand-600)}
+button{font-family:inherit}
+.container{max-width:1180px;margin:0 auto;padding:0 20px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+/* ---------- Top notice + header ---------- */
+.notice{background:var(--navy);color:#D6DEE8;font-size:13px;padding:8px 0;text-align:center}
+.notice b{color:#fff}
+header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.site .bar{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);text-decoration:none;line-height:1.2}
+.brand-mark{width:36px;height:36px;border-radius:10px;background:var(--brand);display:grid;place-items:center;color:#fff;flex:none}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+nav.main{display:flex;gap:2px}
+nav.main a{padding:8px 12px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-size:14.5px;font-weight:500}
+nav.main a:hover{background:var(--brand-50);color:var(--brand-600)}
+.menu-btn{display:none;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+@media(max-width:860px){
+  nav.main{display:none;position:absolute;top:64px;left:0;right:0;background:#fff;flex-direction:column;padding:8px 16px 14px;border-bottom:1px solid var(--line)}
+  nav.main.open{display:flex}
+  .menu-btn{display:block}
+}
+
+/* ---------- Hero ---------- */
+.hero{padding:64px 0 56px;background:radial-gradient(1200px 400px at 85% -10%,var(--brand-100),transparent 60%),var(--bg)}
+.hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;color:var(--brand-600);background:var(--brand-50);border:1px solid var(--brand-100);padding:4px 10px;border-radius:999px;margin-bottom:14px}
+h1{font-size:clamp(28px,4.2vw,44px);line-height:1.25;font-weight:700;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--brand)}
+.lead{font-size:18px;color:var(--ink-2);margin:16px 0 26px;max-width:58ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s;line-height:1.3}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-600)}
+.btn-primary:disabled{background:#D3D7DD;cursor:not-allowed}
+.btn-ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{border-color:#C9CED6}
+.btn-sm{padding:8px 12px;font-size:13px;border-radius:9px}
+.btn-block{width:100%}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px;max-width:560px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat b{font-size:24px;display:block;line-height:1.2}
+.stat span{font-size:13px;color:var(--muted)}
+.journey{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.journey h3{font-size:16px;margin-bottom:4px}
+.journey p{font-size:13.5px;color:var(--muted);margin-bottom:16px}
+.j-steps{list-style:none;display:flex;flex-direction:column;gap:0}
+.j-steps li{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;position:relative;padding-bottom:14px}
+.j-steps li:not(:last-child)::after{content:"";position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--brand-100)}
+.j-steps .dot{width:40px;height:40px;border-radius:12px;background:var(--brand-50);color:var(--brand-600);display:grid;place-items:center;font-weight:700;font-size:14px}
+.j-steps b{display:block;font-size:15px}
+.j-steps span{font-size:13px;color:var(--muted)}
+.j-steps a{font-size:12px;text-decoration:none;font-weight:600;margin-right:6px}
+@media(max-width:900px){.hero-grid{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.stats{grid-template-columns:1fr}}
+
+/* ---------- Sections ---------- */
+section.block{padding:64px 0}
+section.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.section-head{max-width:760px;margin-bottom:28px}
+.kicker{font-size:13px;font-weight:600;color:var(--brand-600);letter-spacing:.02em;margin-bottom:6px;display:block}
+h2{font-size:clamp(24px,3vw,32px);line-height:1.3;letter-spacing:-.005em}
+.section-head p{color:var(--ink-2);margin-top:10px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+table.ia{width:100%;border-collapse:collapse;min-width:640px;font-size:15px}
+table.ia th,table.ia td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+table.ia th{background:#FAFAF8;font-size:13px;color:var(--muted);font-weight:600}
+table.ia tr:last-child td{border-bottom:0}
+table.ia .new{font-size:11px;background:var(--brand);color:#fff;padding:2px 7px;border-radius:999px;margin-left:6px;font-weight:600;vertical-align:middle}
+.pill{display:inline-block;background:var(--brand-50);color:var(--brand-600);border-radius:6px;padding:1px 8px;margin:2px 4px 2px 0;font-size:13.5px;text-decoration:none;font-weight:500}
+.index-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.index-chips a{display:inline-flex;gap:6px;align-items:center;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;text-decoration:none;color:var(--ink-2);font-size:14px}
+.index-chips a b{color:var(--brand-600)}
+.index-chips a:hover{border-color:var(--brand)}
+
+/* ---------- Feature layout ---------- */
+.feature{display:grid;grid-template-columns:1fr 372px;gap:56px;align-items:start;padding:56px 0;border-top:1px solid var(--line)}
+.feature:first-child{border-top:0;padding-top:12px}
+.f-num{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--brand);color:#fff;font-weight:700;font-size:18px;margin-bottom:14px}
+.feature h3{font-size:clamp(21px,2.4vw,26px);line-height:1.35;margin-bottom:12px}
+.crumb{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13.5px;margin-bottom:6px}
+.crumb span{background:var(--brand-50);color:var(--brand-600);padding:3px 10px;border-radius:7px;font-weight:600}
+.crumb i{font-style:normal;color:var(--muted)}
+.where-note{font-size:13.5px;color:var(--muted);margin-bottom:16px}
+.f-desc{color:var(--ink-2);margin-bottom:18px}
+.f-sub{font-size:14px;font-weight:700;margin:18px 0 8px;color:var(--ink);text-transform:none}
+.ux-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ux-list li{position:relative;padding-left:22px;color:var(--ink-2);font-size:15px}
+.ux-list li::before{content:"";position:absolute;left:4px;top:10px;width:7px;height:7px;border-radius:2px;background:var(--brand)}
+.kpi{display:flex;flex-wrap:wrap;gap:8px}
+.kpi span{font-size:13px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;color:var(--ink-2)}
+.try{margin-top:18px;font-size:13.5px;color:var(--muted);display:flex;gap:8px;align-items:flex-start;background:#fff;border:1px dashed #D6DAE0;border-radius:10px;padding:10px 12px}
+@media(max-width:1000px){.feature{grid-template-columns:minmax(0,1fr);gap:28px}}
+.feature>*,.hero-grid>*{min-width:0}
+
+/* ---------- Phone mockup ---------- */
+.phone{width:372px;height:760px;border-radius:48px;background:#0F1216;padding:12px;box-shadow:0 30px 60px -20px rgba(16,24,40,.35);position:sticky;top:84px}
+.screen{width:100%;height:100%;border-radius:37px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;position:relative;isolation:isolate}
+.sb{height:36px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:12px;font-weight:600;background:#fff}
+.app-h{background:#fff;padding:6px 16px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex:none}
+.app-h h4{font-size:16px;font-weight:600}
+.app-h .back{color:var(--ink-2);display:grid;place-items:center}
+.app-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.55;scrollbar-width:thin}
+.tabbar{height:64px;flex:none;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:6px}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px;color:#8A919C}
+.tab.on{color:var(--brand);font-weight:600}
+.tab.new-tab{position:relative}
+.tab.new-tab::after{content:"ใหม่";position:absolute;top:4px;right:10px;font-size:8.5px;background:var(--brand);color:#fff;border-radius:6px;padding:0 4px;line-height:14px;font-weight:600}
+@media(max-width:1000px){.phone{position:relative;top:0;margin:0 auto}}
+@media(max-width:420px){.phone{width:100%;height:720px;border-radius:40px;padding:10px}.screen{border-radius:31px}}
+
+/* ---------- In-app components ---------- */
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.hcard{background:linear-gradient(135deg,#E36F0C,#F29B45);color:#fff;border:0}
+.hcard .muted{color:rgba(255,255,255,.85)}
+.lbl{display:block;font-size:12.5px;color:var(--muted);margin:10px 0 6px;font-weight:500}
+.inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
+.inp:focus{outline:2px solid var(--brand);outline-offset:0;border-color:transparent}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.3}
+.chip.on{background:var(--brand-50);border-color:var(--brand);color:var(--brand-600);font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0}
+.rows .row+.row{border-top:1px dashed var(--line)}
+.muted{color:var(--muted)}
+.fine{font-size:11.5px;color:var(--muted);line-height:1.5}
+.big-val{font-size:26px;font-weight:700;line-height:1.25}
+.big-val small{font-size:13px;font-weight:500;color:var(--muted)}
+.center{text-align:center}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap;line-height:1.4}
+.b-ok{background:var(--ok-50);color:var(--ok)}
+.b-warn{background:var(--warn-50);color:var(--warn)}
+.b-bad{background:var(--bad-50);color:var(--bad)}
+.b-brand{background:var(--brand-50);color:var(--brand-600)}
+.b-gray{background:#EEF0F3;color:var(--ink-2)}
+.steps{display:flex;gap:6px;margin-bottom:12px}
+.steps span{flex:1;font-size:11px;text-align:center;padding-top:6px;border-top:3px solid var(--line);color:var(--muted)}
+.steps span.on{border-color:var(--brand);color:var(--brand-600);font-weight:600}
+.q{font-weight:600;font-size:15px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.switch{position:relative;width:44px;height:26px;flex:none;display:inline-block}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.switch span{position:absolute;inset:0;background:#CDD2D9;border-radius:999px;transition:.2s}
+.switch span::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch input:checked+span{background:var(--brand)}
+.switch input:checked+span::before{transform:translateX(18px)}
+.switch input:focus-visible+span{outline:2px solid var(--brand);outline-offset:2px}
+.sheet-wrap{position:absolute;inset:0;background:rgba(15,20,30,.45);display:flex;align-items:flex-end;z-index:20;animation:fade .2s}
+.sheet{background:#fff;width:100%;max-height:88%;overflow-y:auto;border-radius:22px 22px 0 0;padding:10px 16px 22px;animation:up .25s ease-out;font-size:14px;display:flex;flex-direction:column;gap:10px}
+.grab{width:40px;height:4px;border-radius:4px;background:#D5D9DF;margin:0 auto 4px;flex:none}
+.sheet h5{font-size:16px}
+@keyframes up{from{transform:translateY(100%)}}
+@keyframes fade{from{opacity:0}}
+.toast{position:absolute;left:14px;right:14px;bottom:78px;background:#1C2430;color:#fff;padding:10px 14px;border-radius:12px;font-size:13px;opacity:0;transform:translateY(8px);transition:.25s;z-index:30;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.push{position:absolute;left:10px;right:10px;top:42px;background:rgba(255,255,255,.98);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.2);padding:10px 12px;display:flex;gap:10px;z-index:30;animation:down .35s ease-out;font-size:12.5px;line-height:1.45}
+.push .pi{width:32px;height:32px;border-radius:8px;background:var(--brand);color:#fff;display:grid;place-items:center;flex:none;font-weight:700;font-size:11px}
+@keyframes down{from{transform:translateY(-140%)}}
+.timeline{list-style:none;padding-left:22px}
+.timeline li{position:relative;padding:0 0 14px}
+.timeline li::before{content:"";position:absolute;left:-18px;top:6px;width:11px;height:11px;border-radius:50%;background:#CDD2D9}
+.timeline li::after{content:"";position:absolute;left:-13px;top:19px;bottom:-1px;width:2px;background:#E4E6EA}
+.timeline li:last-child::after{display:none}
+.timeline li.done::before{background:var(--ok)}
+.timeline li.cur::before{background:var(--brand);box-shadow:0 0 0 4px var(--brand-100)}
+.timeline li.cur b{color:var(--brand-600)}
+.timeline small{display:block;color:var(--muted);font-size:11.5px}
+.opt{border:1.5px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:13.5px;color:var(--ink)}
+.opt.on{border-color:var(--brand);background:var(--brand-50)}
+.opt b{font-size:14px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:#EAECEF;border-radius:10px;padding:3px}
+.seg button{border:0;background:none;font-size:13px;padding:6px;border-radius:8px;cursor:pointer;color:var(--ink-2)}
+.seg button.on{background:#fff;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08);color:var(--ink)}
+.prop{padding:0;overflow:hidden}
+.prop .ph{height:104px;display:grid;place-items:center;position:relative}
+.prop .pb{padding:12px}
+.fav{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:#fff;border:0;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.fav.on{color:#D92D20}
+.fav.on svg{fill:currentColor}
+.map{height:470px;border-radius:14px;position:relative;overflow:hidden;border:1px solid var(--line);background:linear-gradient(90deg,rgba(0,0,0,.035) 1px,transparent 1px) 0 0/26px 26px,linear-gradient(rgba(0,0,0,.035) 1px,transparent 1px) 0 0/26px 26px,#E9EFE5}
+.map .river{position:absolute;inset:0}
+.pin{position:absolute;transform:translate(-50%,-100%);background:var(--brand);color:#fff;font-size:11px;font-weight:700;padding:3px 7px;border-radius:8px;border:0;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pin::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-bottom:0;border-top-color:inherit;border-top-color:var(--brand)}
+.pin.on{background:var(--navy);z-index:2}
+.pin.on::after{border-top-color:var(--navy)}
+.map-card{position:absolute;left:8px;right:8px;bottom:8px;z-index:3}
+.cta-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.doc{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left;font-size:13.5px;color:var(--ink)}
+.doc:first-child{border-top:0}
+.doc-ic{width:34px;height:40px;border-radius:6px;background:var(--brand-50);color:var(--brand-600);display:grid;place-items:center;font-size:9.5px;font-weight:700;flex:none;border:1px solid var(--brand-100)}
+.paper{border:1px solid var(--line);border-radius:8px;padding:14px;font-size:12px;background:#FCFCFB;line-height:1.6}
+.paper h6{font-size:13px;margin-bottom:6px}
+.ring-wrap{display:grid;place-items:center;position:relative}
+.ring-label{position:absolute;text-align:center}
+.ring-label b{font-size:26px;display:block;line-height:1.1}
+.ms{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ms div{text-align:center;padding:8px 2px;border-radius:10px;background:#F1F2F4;font-size:11px;color:var(--muted)}
+.ms div.on{background:var(--ok-50);color:var(--ok);font-weight:600}
+.avs{display:flex}
+.av{width:32px;height:32px;border-radius:50%;color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;border:2px solid #fff;flex:none}
+.avs .av+.av{margin-left:-10px}
+table.mini{width:100%;border-collapse:collapse;font-size:12.5px}
+table.mini th,table.mini td{text-align:left;padding:7px 4px;border-bottom:1px solid var(--line)}
+table.mini th{color:var(--muted);font-weight:500}
+table.mini td:last-child,table.mini th:last-child{text-align:right}
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.svc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11.5px;cursor:pointer;color:var(--ink-2)}
+.svc:hover{border-color:var(--brand)}
+.svc .ic{width:36px;height:36px;border-radius:10px;background:var(--brand-50);color:var(--brand-600);display:grid;place-items:center}
+.stars{display:flex;gap:2px}
+.stars button{border:0;background:none;font-size:22px;color:#D0D4DA;cursor:pointer;line-height:1;padding:0 2px}
+.stars button.on{color:#F5A524}
+.carousel{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:2px;scrollbar-width:none;margin:0 -14px;padding-left:14px;padding-right:14px;scroll-padding-left:14px}
+.carousel::-webkit-scrollbar{display:none}
+.ins{flex:0 0 86%;scroll-snap-align:start;display:flex;flex-direction:column;gap:6px}
+.ins .ttl{font-weight:600;font-size:14.5px;line-height:1.45}
+.dots{display:flex;gap:5px;justify-content:center}
+.dots i{width:6px;height:6px;border-radius:4px;background:#D0D4DA;transition:.2s}
+.dots i.on{background:var(--brand);width:16px}
+.sig{width:100%;height:120px;border:1px dashed #B8BEC7;border-radius:10px;background:#FAFAFA;touch-action:none;display:block;cursor:crosshair}
+.alert{border-radius:12px;padding:11px 12px;font-size:13px;line-height:1.5}
+.alert-warn{background:var(--warn-50);color:#5C3500;border:1px solid #F1D895}
+.alert-soft{background:#EEF4FB;color:#1F3B5B;border:1px solid #D3E2F3}
+.alert-ok{background:var(--ok-50);color:#0E4F31;border:1px solid #BFE3CF}
+.alert-bad{background:var(--bad-50);color:#7A1A12;border:1px solid #F5C6C1}
+.qr{width:150px;height:150px;margin:0 auto;display:block}
+.thumb{width:100%;max-height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:13px}
+.check input{margin-top:4px;accent-color:var(--brand)}
+.link-btn{background:none;border:0;color:var(--brand-600);font-weight:600;cursor:pointer;font-size:13px;padding:0}
+.sec-title{font-size:13px;font-weight:600;color:var(--muted);margin:2px 2px -4px}
+.empty{text-align:center;color:var(--muted);padding:24px 8px;font-size:13px}
+
+/* ---------- Roadmap / footer ---------- */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
+.panel h3{font-size:17px;margin-bottom:8px}
+.panel ul{padding-left:18px;color:var(--ink-2);font-size:14.5px;display:flex;flex-direction:column;gap:4px}
+.panel .tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;margin-bottom:10px}
+@media(max-width:860px){.grid-3{grid-template-columns:1fr}}
+footer{background:var(--navy);color:#C5CFDB;padding:40px 0;font-size:14px}
+footer b{color:#fff}
+footer p+p{margin-top:8px}
+</style>
+</head>
+<body>
+
+<div class="notice"><div class="container"><b>ต้นแบบแนวคิด (Concept Prototype)</b> — ไม่ใช่เว็บไซต์หรือแอปพลิเคชันทางการของธนาคารอาคารสงเคราะห์ · ข้อมูลและตัวเลขทั้งหมดเป็นข้อมูลสมมติ</div></div>
+
+<header class="site">
+  <div class="container bar">
+    <a class="brand" href="#top" aria-label="กลับด้านบน">
+      <span class="brand-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-5h6v5"/></svg></span>
+      <span>GHB ALL GEN<small>ข้อเสนอฟังก์ชันใหม่ 10 รายการ</small></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">เมนู</button>
+    <nav class="main" id="mainNav">
+      <a href="#overview">ภาพรวม</a>
+      <a href="#ia">โครงสร้างแอป</a>
+      <a href="#features">ฟังก์ชันทั้ง 10</a>
+      <a href="#roadmap">แผนการพัฒนา</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" id="overview">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Interactive Prototype · UX/UI Proposal</span>
+        <h1>10 ฟังก์ชันใหม่ที่ทำให้ GHB ALL GEN <em>อยู่คู่ผู้ใช้ตลอดเส้นทางการมีบ้าน</em></h1>
+        <p class="lead">ต้นแบบนี้แสดงตำแหน่งที่ควรวางฟังก์ชันแต่ละตัวในแอป หลักการออกแบบ UX/UI และหน้าจอจำลองที่กดใช้งานได้จริง ตั้งแต่เริ่มออมเงินดาวน์ไปจนถึงการดูแลบ้านหลังเข้าอยู่</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#features">ทดลองใช้ฟังก์ชันทั้ง 10</a>
+          <a class="btn btn-ghost" href="#ia">ดูโครงสร้างแท็บ</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>10</b><span>ฟังก์ชันใหม่</span></div>
+          <div class="stat"><b>1</b><span>แท็บใหม่ "บ้าน"</span></div>
+          <div class="stat"><b>6</b><span>ช่วงของเส้นทางผู้ใช้</span></div>
+        </div>
+      </div>
+      <aside class="journey" aria-label="เส้นทางผู้ใช้">
+        <h3>เส้นทางผู้ใช้ (Customer Journey)</h3>
+        <p>ฟังก์ชันทั้งหมดเชื่อมต่อกันเป็นเส้นทางเดียว</p>
+        <ol class="j-steps">
+          <li><span class="dot">1</span><div><b>ออมเงินดาวน์</b><span>ตั้งเป้าและออมอัตโนมัติ</span><br><a href="#f5">ข้อ 5</a></div></li>
+          <li><span class="dot">2</span><div><b>เช็กวงเงิน</b><span>รู้ว่ากู้ได้เท่าไรก่อนยื่นจริง</span><br><a href="#f1">ข้อ 1</a></div></li>
+          <li><span class="dot">3</span><div><b>หาบ้าน</b><span>ค้นทรัพย์ NPA และโครงการ</span><br><a href="#f2">ข้อ 2</a></div></li>
+          <li><span class="dot">4</span><div><b>กู้และผ่อน</b><span>ผ่อนสบาย มีตัวช่วยเมื่อติดขัด</span><br><a href="#f6">ข้อ 6</a><a href="#f7">ข้อ 7</a><a href="#f4">ข้อ 4</a></div></li>
+          <li><span class="dot">5</span><div><b>บริหารสินเชื่อ</b><span>เอกสาร ภาษี คำแนะนำเชิงรุก</span><br><a href="#f3">ข้อ 3</a><a href="#f10">ข้อ 10</a></div></li>
+          <li><span class="dot">6</span><div><b>ดูแลบ้าน</b><span>ประกัน ช่าง ภาษีที่ดิน</span><br><a href="#f8">ข้อ 8</a><a href="#f9">ข้อ 9</a></div></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <section class="block alt" id="ia">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Information Architecture</span>
+        <h2>โครงสร้างแท็บและตำแหน่งของฟังก์ชันใหม่</h2>
+        <p>เสนอให้เพิ่มแท็บ "บ้าน" เป็นศูนย์รวมทุกเรื่องของการมีบ้าน ส่วนแท็บเดิมรับฟังก์ชันที่เกี่ยวกับบัญชีและการตั้งค่า</p>
+      </div>
+      <div class="table-wrap">
+        <table class="ia">
+          <thead><tr><th style="width:22%">แท็บ</th><th style="width:38%">บทบาทของแท็บ</th><th>ฟังก์ชันใหม่ที่วางไว้</th></tr></thead>
+          <tbody>
+            <tr><td><b>หน้าแรก</b></td><td>ภาพรวมและสิ่งที่ต้องทำตอนนี้</td><td><a class="pill" href="#f10">10 Smart Insights</a><a class="pill" href="#f6">6 การ์ดนับถอยหลังวันผ่อน</a></td></tr>
+            <tr><td><b>บัญชี</b></td><td>เงินฝาก สินเชื่อ และธุรกรรม</td><td><a class="pill" href="#f3">3 คลังเอกสาร</a><a class="pill" href="#f4">4 ปรับโครงสร้างหนี้</a><a class="pill" href="#f5">5 เป้าออม</a><a class="pill" href="#f6">6 ตัดบัญชีอัตโนมัติ</a></td></tr>
+            <tr><td><b>บ้าน</b><span class="new">ใหม่</span></td><td>ทุกเรื่องของการมีบ้าน ตั้งแต่หาจนถึงดูแล</td><td><a class="pill" href="#f1">1 เช็กวงเงิน</a><a class="pill" href="#f2">2 หาบ้าน/NPA</a><a class="pill" href="#f8">8 ประกัน</a><a class="pill" href="#f9">9 ดูแลบ้าน</a></td></tr>
+            <tr><td><b>บริการ</b></td><td>บริการเสริมและทางลัด</td><td><span class="muted">ทางลัดไปยังข้อ 3 และข้อ 9</span></td></tr>
+            <tr><td><b>โปรไฟล์</b></td><td>ข้อมูลส่วนตัว ความปลอดภัย การตั้งค่า</td><td><a class="pill" href="#f7">7 ผู้กู้ร่วม/ครอบครัว</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="features">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Features</span>
+        <h2>ฟังก์ชันใหม่ทั้ง 10 รายการ</h2>
+        <p>แต่ละหัวข้ออธิบายตำแหน่งในแอป หลักการ UX/UI และตัวชี้วัด หน้าจอด้านขวากดใช้งานได้จริง (ข้อมูลจำลอง)</p>
+        <div class="index-chips" id="indexChips"></div>
+      </div>
+      <div id="featureList"></div>
+    </div>
+  </section>
+
+  <section class="block alt" id="roadmap">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Roadmap</span>
+        <h2>แผนการพัฒนาและข้อพิจารณาทางเทคนิค</h2>
+        <p>จัดลำดับตามผลกระทบต่อผู้ใช้และความพร้อมของระบบหลังบ้าน</p>
+      </div>
+      <div class="grid-3">
+        <div class="panel"><span class="tag b-brand">ระยะที่ 1 · 0–6 เดือน</span><h3>ลดภาระ Call Center</h3><ul><li>3 คลังเอกสารดิจิทัล</li><li>6 ตัดบัญชีและเตือนวันผ่อน</li><li>1 เช็กวงเงินกู้</li><li>4 ขอความช่วยเหลือด้านการผ่อน</li></ul></div>
+        <div class="panel"><span class="tag b-ok">ระยะที่ 2 · 6–12 เดือน</span><h3>ขยายฐานลูกค้าใหม่</h3><ul><li>2 ค้นหาบ้านและทรัพย์ NPA</li><li>5 เป้าออมเงินดาวน์</li><li>7 ผู้กู้ร่วมและครอบครัว</li><li>8 ประกันบ้าน</li></ul></div>
+        <div class="panel"><span class="tag b-gray">ระยะที่ 3 · 12 เดือนขึ้นไป</span><h3>สร้างการใช้งานต่อเนื่อง</h3><ul><li>9 บริการดูแลบ้าน (พาร์ทเนอร์)</li><li>10 Smart Insights</li><li>เชื่อมข้อมูลจากทุกฟังก์ชันเป็นโปรไฟล์ลูกค้า</li></ul></div>
+      </div>
+      <div class="grid-3" style="margin-top:16px">
+        <div class="panel"><h3>การเชื่อมต่อระบบ</h3><ul><li>API กับระบบสินเชื่อหลัก (Core Loan)</li><li>ระบบเอกสารและ e-Signature</li><li>ระบบพาร์ทเนอร์ประกันและช่าง</li></ul></div>
+        <div class="panel"><h3>ความปลอดภัยและกฎหมาย</h3><ul><li>ขอความยินยอมตาม PDPA ก่อนใช้ข้อมูลเพื่อแนะนำ</li><li>ยืนยันตัวตนก่อนเพิ่มผู้กู้ร่วม</li><li>ปฏิบัติตามแนวทางของ ธปท. ด้านบริการดิจิทัล</li></ul></div>
+        <div class="panel"><h3>ตัวชี้วัดภาพรวม</h3><ul><li>จำนวนผู้ใช้ใช้งานรายเดือน (MAU)</li><li>สายเข้า Call Center ที่ลดลง</li><li>คะแนน App Store และ NPS</li></ul></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <p><b>หมายเหตุ</b> เว็บไซต์นี้เป็นต้นแบบแนวคิดเพื่อการนำเสนอข้อเสนอด้าน UX/UI เท่านั้น ไม่ใช่เว็บไซต์หรือแอปพลิเคชันทางการของธนาคารอาคารสงเคราะห์ และไม่มีการเก็บหรือส่งข้อมูลใด ๆ ออกจากเบราว์เซอร์</p>
+    <p>ชื่อบุคคล ทรัพย์ ยอดเงิน อัตราดอกเบี้ย และเอกสารทั้งหมดเป็นข้อมูลสมมติ ผลการคำนวณเป็นการประมาณการ ไม่ถือเป็นข้อเสนอหรือการอนุมัติสินเชื่อ</p>
+  </div>
+</footer>
+
+<script>
+'use strict';
+/* =========================================================
+   Helpers
+   ========================================================= */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const fmt = (n, d = 0) => Number(n).toLocaleString('th-TH', { minimumFractionDigits: d, maximumFractionDigits: d });
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+/** ค่างวดรายเดือน (สูตรเงินงวดเท่ากัน) */
+function pmt(P, rate, months) { const r = rate / 1200; return r ? P * r / (1 - Math.pow(1 + r, -months)) : P / months; }
+/** วงเงินที่กู้ได้จากค่างวดที่จ่ายไหว */
+function pv(pay, rate, months) { const r = rate / 1200; return r ? pay * (1 - Math.pow(1 + r, -months)) / r : pay * months; }
+/** จำลองการผ่อนจนหมด คืนจำนวนเดือนและดอกเบี้ยรวม */
+function payoff(P, rate, pay) {
+  const r = rate / 1200; let b = P, m = 0, i = 0;
+  while (b > 0.5 && m < 1200) { const x = b * r; i += x; b = b + x - pay; m++; }
+  return { months: m, interest: i };
+}
+const TODAY = new Date();
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const thDate = d => d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+const thDay  = d => d.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short' });
+const ym = m => { const y = Math.floor(m / 12), mo = m % 12; return (y ? y + ' ปี ' : '') + (mo ? mo + ' เดือน' : (y ? '' : '0 เดือน')); };
+
+/* ข้อมูลสมมติที่ใช้ร่วมกันระหว่างฟังก์ชัน */
+const S = {
+  rate: 3.5,                // อัตราดอกเบี้ยสมมติ (% ต่อปี)
+  loanCap: null,            // วงเงินจากข้อ 1 ใช้ต่อในข้อ 2
+  loan: { balance: 1850000, rate: 3.5, monthsLeft: 264, no: 'LN-6205-0018420' }
+};
+S.loan.pay = Math.round(pmt(S.loan.balance, S.loan.rate, S.loan.monthsLeft));
+
+/* =========================================================
+   Icons + phone shell
+   ========================================================= */
+const svg = (p, s = 20, extra = '') => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${p}</svg>`;
+const IC = {
+  home:  '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+  acct:  '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>',
+  house: '<path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-5h6v5"/>',
+  svc:   '<rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/>',
+  me:    '<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  back:  '<path d="M15 18l-6-6 6-6"/>',
+  heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  bell:  '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',
+  doc:   '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+  bolt:  '<path d="M13 2L5 14h6l-1 8 8-12h-6z"/>',
+  drop:  '<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>',
+  snow:  '<path d="M12 2v20M4 7l16 10M20 7L4 17"/>',
+  roof:  '<path d="M2 12l10-8 10 8"/><path d="M5 10v10h14V10"/>',
+  spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>',
+  sun:   '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+  brush: '<path d="M4 20c3 0 4-1.5 4-4l9-9a2 2 0 0 0-3-3l-9 9c-2.5 0-4 1-4 4"/>',
+  bug:   '<rect x="8" y="7" width="8" height="12" rx="4"/><path d="M12 7V4M4 13h4M16 13h4M5 8l3 2M19 8l-3 2M5 18l3-2M19 18l-3-2"/>',
+  check: '<path d="M5 12l5 5 9-10"/>',
+  cam:   '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  pin:   '<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
+};
+const TABS = [['home', 'หน้าแรก'], ['acct', 'บัญชี'], ['house', 'บ้าน'], ['svc', 'บริการ'], ['me', 'โปรไฟล์']];
+
+function phoneShell(id, title, tab) {
+  return `<div class="phone" aria-label="หน้าจอจำลอง: ${esc(title)}">
+    <div class="screen" id="scr-${id}">
+      <div class="sb"><span>09:41</span><span>5G · 100%</span></div>
+      <div class="app-h"><span class="back">${svg(IC.back, 18)}</span><h4>${esc(title)}</h4></div>
+      <div class="app-body" id="app-${id}"></div>
+      <nav class="tabbar" aria-hidden="true">${TABS.map(([k, l]) => `<div class="tab ${k === tab ? 'on' : ''} ${k === 'house' ? 'new-tab' : ''}">${svg(IC[k])}<span>${l}</span></div>`).join('')}</nav>
+    </div></div>`;
+}
+/** Bottom sheet ภายในหน้าจอโทรศัพท์ */
+function sheet(id, html) {
+  const scr = $('#scr-' + id);
+  const o = document.createElement('div');
+  o.className = 'sheet-wrap';
+  o.innerHTML = `<div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div>`;
+  o.addEventListener('click', e => { if (e.target === o || e.target.closest('[data-close]')) o.remove(); });
+  o.addEventListener('keydown', e => { if (e.key === 'Escape') o.remove(); });
+  scr.appendChild(o);
+  const f = o.querySelector('button, input, select'); if (f) f.focus({ preventScroll: true });
+  return o;
+}
+function toast(id, msg) {
+  const scr = $('#scr-' + id);
+  const t = document.createElement('div');
+  t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+  scr.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 2800);
+}
+function pushNote(id, title, body) {
+  const scr = $('#scr-' + id);
+  $$('.push', scr).forEach(p => p.remove());
+  const p = document.createElement('div');
+  p.className = 'push'; p.setAttribute('role', 'status');
+  p.innerHTML = `<div class="pi">GHB</div><div><b>${esc(title)}</b><br>${esc(body)}</div>`;
+  scr.appendChild(p);
+  setTimeout(() => p.remove(), 4500);
+}
+const house = (c = '#fff') => `<svg viewBox="0 0 120 70" width="120" height="70" aria-hidden="true"><path d="M22 64V34l38-26 38 26v30z" fill="#fff" opacity=".9"/><path d="M14 38L60 6l46 32" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="50" y="42" width="20" height="22" rx="2" fill="${c}"/><rect x="30" y="40" width="12" height="10" rx="1.5" fill="${c}" opacity=".7"/><rect x="78" y="40" width="12" height="10" rx="1.5" fill="${c}" opacity=".7"/></svg>`;
+
+/* =========================================================
+   เนื้อหาคำอธิบายของแต่ละฟังก์ชัน
+   ========================================================= */
+const FEATURES = [
+  { id: 'f1', title: 'เช็กวงเงินกู้ก่อนยื่นจริง (Pre-Approval)', tab: 'house', app: 'เช็กวงเงินกู้ของฉัน',
+    where: ['แท็บ บ้าน', 'การ์ดแรกบนสุด', 'เช็กวงเงินกู้ของฉัน'],
+    note: 'และแสดงเป็นแบนเนอร์บนหน้าแรกสำหรับผู้ใช้ที่ยังไม่มีสินเชื่อ',
+    desc: 'ผู้ใช้กรอกรายได้ ภาระหนี้ และอาชีพ แล้วรู้วงเงินที่น่าจะกู้ได้ ค่างวดโดยประมาณ และระดับความพร้อม ก่อนตัดสินใจยื่นกู้จริง ช่วยลดคำขอที่ไม่ผ่านเกณฑ์และเพิ่มคำขอที่มีคุณภาพ',
+    ux: ['ถามทีละเรื่องใน 3 ขั้น มีแถบบอกความคืบหน้า ใช้ Slider แทนการพิมพ์ตัวเลข',
+         'ผลลัพธ์เป็นมาตรวัดสีเขียว เหลือง แดง พร้อมตัวเลขวงเงินขนาดใหญ่',
+         'ถ้ายังไม่พร้อม ให้บอกเหตุผลและคำแนะนำที่เป็นตัวเลข เช่น ลดหนี้เท่าไรวงเงินจะเพิ่มเท่าไร',
+         'ปุ่ม "ยื่นกู้ต่อเลย" นำข้อมูลที่กรอกไปใช้ต่อ ไม่ต้องกรอกซ้ำ'],
+    kpi: ['อัตราเปลี่ยนเป็นคำขอกู้', 'อัตราคำขอที่ผ่านเกณฑ์'],
+    tryit: 'ลองเลื่อนรายได้และภาระหนี้ แล้วกด "ดูผลลัพธ์" วงเงินที่ได้จะถูกใช้ต่อในข้อ 2' },
+  { id: 'f2', title: 'ค้นหาบ้านและทรัพย์ NPA ในแอป', tab: 'house', app: 'หาบ้าน',
+    where: ['แท็บ บ้าน', 'หาบ้าน'],
+    note: 'รวมข้อมูลทรัพย์ NPA และโครงการที่ร่วมกับธนาคารไว้ในแอปเดียว ไม่ต้องสลับไปอีกแอป',
+    desc: 'ค้นหาทรัพย์บนแผนที่หรือรายการ กรองตามประเภท ราคา และสถานะ NPA บันทึกรายการโปรด เห็นค่างวดโดยประมาณของทุกหลัง และนัดดูบ้านหรือยื่นกู้ได้จากหน้าเดียวกัน',
+    ux: ['สลับมุมมองรายการกับแผนที่ด้วย Segmented control',
+         'ตัวกรองอยู่ใน Bottom sheet และสรุปตัวกรองที่ใช้อยู่เป็น Chip',
+         'การ์ดทรัพย์แสดง "ผ่อนเริ่มต้น x บาท/เดือน" และป้าย "อยู่ในวงเงิน" จากข้อ 1',
+         'ปุ่ม "นัดดูบ้าน" และ "ยื่นกู้หลังนี้" อยู่ท้ายการ์ดทุกใบ'],
+    kpi: ['ยอดนัดดูทรัพย์', 'ยอดขายทรัพย์ NPA ผ่านแอป'],
+    tryit: 'ลองกดหัวใจ เปิดตัวกรอง สลับเป็นแผนที่ แล้วแตะหมุดราคา' },
+  { id: 'f3', title: 'คลังเอกสารดิจิทัล (Document Vault)', tab: 'acct', app: 'เอกสารของฉัน',
+    where: ['แท็บ บัญชี', 'เลือกสินเชื่อ', 'เอกสารของฉัน'],
+    note: 'และมีทางลัดในแท็บบริการ',
+    desc: 'ดาวน์โหลดหนังสือรับรองดอกเบี้ยเพื่อลดหย่อนภาษี Statement ตารางผ่อนชำระ สำเนาสัญญา และใบเสร็จได้ด้วยตัวเองตลอด 24 ชั่วโมง ลดการขอเอกสารที่สาขาและ Call Center',
+    ux: ['แบ่งหมวดด้วย Chip: ภาษี / สัญญา / Statement / ใบเสร็จ และกรองตามปี',
+         'ช่วงยื่นภาษี (ม.ค.–มี.ค.) ขึ้นการ์ด "หนังสือรับรองดอกเบี้ยพร้อมแล้ว" ไว้บนสุด',
+         'ดูตัวอย่างเอกสารก่อน แล้วค่อยดาวน์โหลด แชร์ หรือส่งเข้าอีเมล'],
+    kpi: ['จำนวนคำขอเอกสารที่สาขาลดลง', 'ยอดดาวน์โหลดช่วงยื่นภาษี'],
+    tryit: 'ลองกดหมวด "ภาษี" แล้วเปิดเอกสาร กดดาวน์โหลดจะได้ไฟล์ตัวอย่าง' },
+  { id: 'f4', title: 'ขอปรับโครงสร้างหนี้และพักชำระออนไลน์', tab: 'acct', app: 'ขอความช่วยเหลือด้านการผ่อน',
+    where: ['แท็บ บัญชี', 'สินเชื่อ', 'ขอความช่วยเหลือด้านการผ่อน'],
+    note: 'และแสดงขึ้นเองเมื่อผู้ใช้ค้างชำระ 1 งวด',
+    desc: 'ผู้ใช้เลือกมาตรการที่ตนมีสิทธิ์ เห็นผลเปรียบเทียบค่างวด ระยะเวลา และดอกเบี้ยรวมของแต่ละทาง ยื่นคำขอ ลงนามอิเล็กทรอนิกส์ และติดตามสถานะได้ในแอป',
+    ux: ['ใช้ภาษาและโทนสีที่อ่อนโยน หัวข้อ "เราพร้อมช่วยคุณ" ไม่ใช้สีแดงเชิงตำหนิ',
+         'เปรียบเทียบแต่ละมาตรการด้วยการ์ดที่มีตัวเลขเดียวกัน พร้อมส่วนต่างจากเดิม',
+         'ลงนามรับเงื่อนไขด้วย e-Signature แล้วติดตามผลผ่านไทม์ไลน์'],
+    kpi: ['อัตราหนี้ค้างชำระ (NPL) ที่ลดลง', 'เวลาพิจารณาคำขอเฉลี่ย'],
+    tryit: 'ลองเปิดสวิตช์ "จำลองค้างชำระ" เลือกมาตรการ แล้วยื่นคำขอพร้อมเซ็นชื่อ' },
+  { id: 'f5', title: 'ตั้งเป้าออมเงินดาวน์บ้าน (Home Savings Goal)', tab: 'acct', app: 'เป้าหมายออมบ้าน',
+    where: ['แท็บ บัญชี', 'สร้างเป้าหมายออม'],
+    note: 'และมีทางลัดในแท็บบ้าน สำหรับกลุ่ม Gen Y และ Gen Z ที่ยังไม่มีบ้าน',
+    desc: 'ตั้งราคาบ้านในฝัน สัดส่วนเงินดาวน์ และระยะเวลา ระบบคำนวณยอดที่ต้องออมต่อเดือนและตัดเงินอัตโนมัติ เมื่อออมครบเชื่อมต่อไปยังการขอสินเชื่อทันที',
+    ux: ['ความคืบหน้าแสดงเป็นวงแหวนเปอร์เซ็นต์ เห็นชัดในแวบเดียว',
+         'Milestone ที่ 25 / 50 / 75 / 100% พร้อมข้อความชื่นชมเมื่อผ่านแต่ละขั้น',
+         'เลือกภาพบ้านในฝันเพื่อสร้างแรงจูงใจ',
+         'ออมครบ 100% มีปุ่ม "เริ่มขอสินเชื่อ" ไปยังข้อ 1'],
+    kpi: ['จำนวนบัญชีเป้าหมายที่เปิด', 'อัตราเปลี่ยนจากผู้ออมเป็นผู้กู้'],
+    tryit: 'กด "จำลองออมเพิ่ม 1 เดือน" หลายครั้งเพื่อดู Milestone' }
+];
+
+/* =========================================================
+   1) เช็กวงเงินกู้
+   ========================================================= */
+function f1(el) {
+  const JOBS = ['พนักงานประจำ', 'ข้าราชการ', 'อาชีพอิสระ', 'เจ้าของกิจการ'];
+  const st = { step: 1, income: 35000, job: 'พนักงานประจำ', debt: 5000, years: 30, rate: S.rate };
+  el.innerHTML = `<div class="card"><div class="steps">${['รายได้', 'ภาระหนี้', 'ผลลัพธ์'].map((s, i) => `<span>${i + 1} ${s}</span>`).join('')}</div><div class="stack" id="f1-q"></div></div>
+  <div class="card"><div class="row" style="padding:0"><div><b>ยังไม่มีบ้าน?</b><div class="fine">เริ่มออมเงินดาวน์กับเป้าหมายออมบ้าน</div></div><a class="btn btn-ghost btn-sm" href="#f5">ข้อ 5</a></div></div>`;
+  const q = $('#f1-q', el);
+  const adjInc = () => st.income * (['อาชีพอิสระ', 'เจ้าของกิจการ'].includes(st.job) ? 0.7 : 1);
+  const calc = debt => {
+    const inc = adjInc(), room = inc * 0.4 - debt;
+    const loan = room > 0 ? Math.floor(pv(room, st.rate, st.years * 12) / 10000) * 10000 : 0;
+    return { inc, room, loan };
+  };
+  function render() {
+    $$('.steps span', el).forEach((s, i) => s.classList.toggle('on', i < st.step));
+    if (st.step === 1) {
+      q.innerHTML = `<p class="q">รายได้ต่อเดือนของคุณเท่าไร?</p>
+        <div class="big-val"><span data-o="income">${fmt(st.income)}</span> <small>บาท/เดือน</small></div>
+        <input type="range" min="10000" max="200000" step="1000" value="${st.income}" data-k="income" aria-label="รายได้ต่อเดือน">
+        <span class="lbl">อาชีพ</span>
+        <div class="chips">${JOBS.map(j => `<button class="chip ${j === st.job ? 'on' : ''}" data-job="${j}">${j}</button>`).join('')}</div>
+        <button class="btn btn-primary btn-block" data-go="2">ถัดไป</button>`;
+    } else if (st.step === 2) {
+      q.innerHTML = `<p class="q">ภาระหนี้ที่ผ่อนอยู่ต่อเดือน</p><p class="fine">รวมค่างวดรถ บัตรเครดิต และสินเชื่อส่วนบุคคล</p>
+        <div class="big-val"><span data-o="debt">${fmt(st.debt)}</span> <small>บาท/เดือน</small></div>
+        <input type="range" min="0" max="100000" step="500" value="${st.debt}" data-k="debt" aria-label="ภาระหนี้ต่อเดือน">
+        <span class="lbl">ระยะเวลาผ่อน: <b data-o="years">${st.years}</b> ปี</span>
+        <input type="range" min="10" max="40" step="1" value="${st.years}" data-k="years" aria-label="ระยะเวลาผ่อน">
+        <span class="lbl">อัตราดอกเบี้ยสมมติ (% ต่อปี)</span>
+        <input class="inp" type="number" min="0" max="15" step="0.05" value="${st.rate}" data-k="rate" aria-label="อัตราดอกเบี้ยสมมติ">
+        <div class="cta-bar"><button class="btn btn-ghost" data-go="1">ย้อนกลับ</button><button class="btn btn-primary" data-go="3">ดูผลลัพธ์</button></div>`;
+    } else {
+      const { inc, room, loan } = calc(st.debt);
+      const dsr = inc ? st.debt / inc : 1;
+      const lv = room <= 0 || dsr > 0.3 ? ['bad', 'ควรลดภาระหนี้ก่อนยื่น'] : dsr > 0.15 ? ['warn', 'ยื่นได้ แต่วงเงินอาจจำกัด'] : ['ok', 'พร้อมยื่นกู้'];
+      const score = Math.max(0.03, Math.min(1, 1 - dsr / 0.4));
+      const col = { ok: '#157347', warn: '#D98A00', bad: '#B42318' }[lv[0]];
+      S.loanCap = loan || null;
+      document.dispatchEvent(new CustomEvent('loancap'));
+      const better = lv[0] !== 'ok' && st.debt > 0 ? calc(Math.max(0, st.debt - 3000)).loan : 0;
+      q.innerHTML = `<div class="center"><svg viewBox="0 0 120 68" width="200" height="113" aria-hidden="true">
+          <path d="M10 62 A50 50 0 0 1 110 62" stroke="#E9EBEF" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <path d="M10 62 A50 50 0 0 1 110 62" stroke="${col}" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="157.1" stroke-dashoffset="157.1" id="f1-arc" style="transition:stroke-dashoffset .8s ease"/></svg>
+          <div><span class="badge b-${lv[0]}">${lv[1]}</span></div></div>
+        <div class="center"><div class="muted">วงเงินกู้โดยประมาณ</div><div class="big-val">${fmt(loan)} <small>บาท</small></div></div>
+        <div class="rows"><div class="row"><span class="muted">ค่างวดโดยประมาณ</span><b>${fmt(Math.max(room, 0))} บาท/เดือน</b></div>
+          <div class="row"><span class="muted">ระยะเวลาผ่อน</span><b>${st.years} ปี</b></div>
+          <div class="row"><span class="muted">ภาระหนี้ต่อรายได้</span><b>${fmt(dsr * 100, 1)}%</b></div></div>
+        ${better > loan ? `<div class="alert alert-soft">ถ้าลดภาระหนี้ลง 3,000 บาท/เดือน วงเงินจะเพิ่มเป็น <b>${fmt(better)} บาท</b></div>` : ''}
+        <button class="btn btn-primary btn-block" data-apply ${loan ? '' : 'disabled'}>ยื่นกู้ต่อเลย</button>
+        <button class="btn btn-ghost btn-block" data-go="1">แก้ไขข้อมูล</button>
+        <p class="fine">ประมาณการเบื้องต้นโดยใช้สมมติฐานภาระหนี้ไม่เกิน 40% ของรายได้ (อาชีพอิสระและเจ้าของกิจการคิดรายได้ 70%) และดอกเบี้ย ${st.rate}% ต่อปี ไม่ถือเป็นการอนุมัติสินเชื่อ</p>`;
+      requestAnimationFrame(() => requestAnimationFrame(() => { const a = $('#f1-arc', q); if (a) a.style.strokeDashoffset = 157.1 * (1 - score); }));
+    }
+  }
+  q.addEventListener('input', e => {
+    const k = e.target.dataset.k; if (!k) return;
+    st[k] = parseFloat(e.target.value) || 0;
+    const o = $(`[data-o="${k}"]`, q); if (o) o.textContent = k === 'years' ? st[k] : fmt(st[k]);
+  });
+  q.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.job) { st.job = b.dataset.job; $$('[data-job]', q).forEach(c => c.classList.toggle('on', c === b)); }
+    if (b.dataset.go) { st.step = +b.dataset.go; render(); }
+    if (b.hasAttribute('data-apply')) toast('f1', 'นำข้อมูลไปกรอกในแบบฟอร์มขอสินเชื่อแล้ว (จำลอง)');
+  });
+  render();
+}
+
+/* =========================================================
+   2) ค้นหาบ้านและทรัพย์ NPA
+   ========================================================= */
+const PROPS = [
+  { id: 1, name: 'บ้านเดี่ยว 2 ชั้น หมู่บ้านสวนร่มไม้', type: 'บ้านเดี่ยว', prov: 'ปทุมธานี', price: 2890000, npa: true, x: 40, y: 30, c: '#F3B77A', beds: 3 },
+  { id: 2, name: 'ทาวน์โฮม 3 ชั้น ใกล้สถานีรถไฟฟ้า', type: 'ทาวน์เฮาส์', prov: 'นนทบุรี', price: 2150000, npa: true, x: 25, y: 44, c: '#8DB8E0', beds: 3 },
+  { id: 3, name: 'คอนโด 1 ห้องนอน ชั้น 12', type: 'คอนโด', prov: 'กรุงเทพฯ', price: 1390000, npa: true, x: 50, y: 52, c: '#A9CF95', beds: 1 },
+  { id: 4, name: 'บ้านเดี่ยวชั้นเดียว ที่ดิน 60 ตร.ว.', type: 'บ้านเดี่ยว', prov: 'ชลบุรี', price: 1750000, npa: true, x: 74, y: 80, c: '#E3A6AB', beds: 2 },
+  { id: 5, name: 'ทาวน์เฮาส์ 2 ชั้น รีโนเวทใหม่', type: 'ทาวน์เฮาส์', prov: 'สมุทรปราการ', price: 1590000, npa: true, x: 64, y: 64, c: '#BBA7E0', beds: 2 },
+  { id: 6, name: 'บ้านเดี่ยวโครงการใหม่ (โครงการร่วม)', type: 'บ้านเดี่ยว', prov: 'นครปฐม', price: 3990000, npa: false, x: 14, y: 58, c: '#E9CD72', beds: 4 },
+  { id: 7, name: 'คอนโด 2 ห้องนอน วิวแม่น้ำ', type: 'คอนโด', prov: 'กรุงเทพฯ', price: 2690000, npa: false, x: 42, y: 42, c: '#8FCFC4', beds: 2 },
+  { id: 8, name: 'บ้านแฝด 2 ชั้น พร้อมอยู่', type: 'บ้านแฝด', prov: 'อยุธยา', price: 2250000, npa: true, x: 34, y: 14, c: '#CFB596', beds: 3 }
+];
+function f2(el) {
+  const st = { view: 'list', type: 'ทั้งหมด', max: 0, npa: false, fav: new Set(), sel: null };
+  const mon = p => pmt(p, S.rate, 360);
+  el.innerHTML = `<div class="seg" role="tablist" aria-label="มุมมอง"><button class="on" data-v="list" role="tab">รายการ</button><button data-v="map" role="tab">แผนที่</button></div>
+    <div class="row" style="padding:0"><div class="chips" id="f2-sum"></div><button class="btn btn-ghost btn-sm" data-filter>${svg(IC.filter, 16)} ตัวกรอง</button></div>
+    <div id="f2-cap"></div><div class="stack" id="f2-out"></div>`;
+  const list = () => PROPS.filter(p => (st.type === 'ทั้งหมด' || p.type === st.type) && (!st.max || p.price <= st.max) && (!st.npa || p.npa));
+  function card(p, compact) {
+    const inCap = S.loanCap && p.price <= S.loanCap;
+    return `<div class="card prop">${compact ? '' : `<div class="ph" style="background:${p.c}">${house(p.c)}
+      <button class="fav ${st.fav.has(p.id) ? 'on' : ''}" data-fav="${p.id}" aria-label="บันทึกรายการโปรด" aria-pressed="${st.fav.has(p.id)}">${svg(IC.heart, 18)}</button>
+      <span class="badge ${p.npa ? 'b-brand' : 'b-gray'}" style="position:absolute;left:8px;top:8px;background:#fff">${p.npa ? 'ทรัพย์ NPA' : 'โครงการร่วม'}</span></div>`}
+      <div class="pb"><b>${p.name}</b><div class="muted" style="font-size:12.5px">${p.type} · ${p.prov} · ${p.beds} ห้องนอน</div>
+      <div class="row" style="padding:6px 0 0"><span class="big-val" style="font-size:19px">${fmt(p.price)} ฿</span>${inCap ? '<span class="badge b-ok">อยู่ในวงเงิน</span>' : ''}</div>
+      <div class="muted" style="font-size:12.5px">ผ่อนเริ่มต้น ≈ <b style="color:var(--brand-600)">${fmt(mon(p.price))}</b> บาท/เดือน (30 ปี)</div>
+      <div class="cta-bar"><button class="btn btn-ghost btn-sm" data-visit="${p.id}">นัดดูบ้าน</button><button class="btn btn-primary btn-sm" data-apply="${p.id}">ยื่นกู้หลังนี้</button></div></div></div>`;
+  }
+  function render() {
+    $('#f2-cap', el).innerHTML = S.loanCap
+      ? `<div class="alert alert-ok">วงเงินจากการเช็กของคุณ ≈ <b>${fmt(S.loanCap)}</b> บาท ทรัพย์ที่อยู่ในวงเงินจะมีป้ายสีเขียว</div>`
+      : `<div class="alert alert-soft">ยังไม่ได้เช็กวงเงิน <a href="#f1">เช็กวงเงินกู้ (ข้อ 1)</a> เพื่อดูว่าหลังไหนอยู่ในงบ</div>`;
+    const sum = [st.type !== 'ทั้งหมด' ? st.type : 'ทุกประเภท', st.max ? '≤ ' + fmt(st.max / 1e6, 1) + ' ลบ.' : null, st.npa ? 'NPA' : null, st.fav.size ? '♥ ' + st.fav.size : null].filter(Boolean);
+    $('#f2-sum', el).innerHTML = sum.map(s => `<span class="chip on" style="cursor:default">${s}</span>`).join('');
+    $$('.seg button', el).forEach(b => { const on = b.dataset.v === st.view; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+    const items = list(), out = $('#f2-out', el);
+    if (!items.length) { out.innerHTML = `<div class="empty">ไม่พบทรัพย์ตามเงื่อนไข<br><button class="link-btn" data-reset>ล้างตัวกรอง</button></div>`; return; }
+    if (st.view === 'list') { out.innerHTML = `<div class="fine">พบ ${items.length} รายการ</div>` + items.map(p => card(p)).join(''); return; }
+    if (!items.some(p => p.id === st.sel)) st.sel = null;
+    const sel = PROPS.find(p => p.id === st.sel);
+    out.innerHTML = `<div class="map"><svg class="river" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M48 0 C 40 20, 58 35, 46 55 S 52 85, 60 100" stroke="#BBD6EA" stroke-width="5" fill="none"/></svg>
+      ${items.map(p => `<button class="pin ${st.sel === p.id ? 'on' : ''}" style="left:${p.x}%;top:${p.y}%" data-pin="${p.id}" aria-label="${esc(p.name)}">${fmt(p.price / 1e6, 2)} ลบ.</button>`).join('')}
+      ${sel ? `<div class="map-card">${card(sel, true)}</div>` : '<div class="map-card"><div class="card fine center">แตะหมุดราคาเพื่อดูรายละเอียด</div></div>'}</div>`;
+  }
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.v) { st.view = b.dataset.v; render(); }
+    else if (b.dataset.fav) { const id = +b.dataset.fav; st.fav.has(id) ? st.fav.delete(id) : st.fav.add(id); toast('f2', st.fav.has(id) ? 'บันทึกในรายการโปรดแล้ว' : 'นำออกจากรายการโปรดแล้ว'); render(); }
+    else if (b.dataset.pin) { st.sel = +b.dataset.pin; render(); }
+    else if (b.hasAttribute('data-reset')) { Object.assign(st, { type: 'ทั้งหมด', max: 0, npa: false }); render(); }
+    else if (b.dataset.apply) { const p = PROPS.find(x => x.id === +b.dataset.apply); toast('f2', `เริ่มคำขอสินเชื่อสำหรับ "${p.name}" (จำลอง)`); }
+    else if (b.dataset.visit) visitSheet(PROPS.find(x => x.id === +b.dataset.visit));
+    else if (b.hasAttribute('data-filter')) filterSheet();
+  });
+  function filterSheet() {
+    let type = st.type;
+    const o = sheet('f2', `<h5>ตัวกรอง</h5><span class="lbl">ประเภททรัพย์</span>
+      <div class="chips" id="f2-types">${['ทั้งหมด', 'บ้านเดี่ยว', 'บ้านแฝด', 'ทาวน์เฮาส์', 'คอนโด'].map(t => `<button class="chip ${t === type ? 'on' : ''}" data-t="${t}">${t}</button>`).join('')}</div>
+      <span class="lbl">ราคาไม่เกิน</span>
+      <select class="inp" id="f2-max">${[[0, 'ไม่จำกัด'], [1500000, '1.5 ล้านบาท'], [2000000, '2 ล้านบาท'], [3000000, '3 ล้านบาท']].map(([v, l]) => `<option value="${v}" ${v === st.max ? 'selected' : ''}>${l}</option>`).join('')}</select>
+      <label class="row"><span>แสดงเฉพาะทรัพย์ NPA</span><span class="switch"><input type="checkbox" id="f2-npa" ${st.npa ? 'checked' : ''}><span></span></span></label>
+      <div class="cta-bar"><button class="btn btn-ghost" data-close>ยกเลิก</button><button class="btn btn-primary" data-ok>แสดงผล</button></div>`);
+    o.addEventListener('click', e => {
+      const t = e.target.closest('[data-t]');
+      if (t) { type = t.dataset.t; $$('[data-t]', o).forEach(c => c.classList.toggle('on', c === t)); }
+      if (e.target.closest('[data-ok]')) { st.type = type; st.max = +$('#f2-max', o).value; st.npa = $('#f2-npa', o).checked; o.remove(); render(); }
+    });
+  }
+  function visitSheet(p) {
+    let day = null, time = null;
+    const days = [1, 2, 3, 4, 5].map(n => addDays(TODAY, n));
+    const o = sheet('f2', `<h5>นัดดูบ้าน</h5><div class="muted">${p.name}</div>
+      <span class="lbl">เลือกวัน</span><div class="chips">${days.map((d, i) => `<button class="chip" data-d="${i}">${thDay(d)}</button>`).join('')}</div>
+      <span class="lbl">เลือกเวลา</span><div class="chips">${['10:00', '13:00', '15:30'].map(t => `<button class="chip" data-tm="${t}">${t}</button>`).join('')}</div>
+      <button class="btn btn-primary btn-block" data-ok disabled>ยืนยันนัดหมาย</button>`);
+    o.addEventListener('click', e => {
+      const d = e.target.closest('[data-d]'), t = e.target.closest('[data-tm]');
+      if (d) { day = days[+d.dataset.d]; $$('[data-d]', o).forEach(c => c.classList.toggle('on', c === d)); }
+      if (t) { time = t.dataset.tm; $$('[data-tm]', o).forEach(c => c.classList.toggle('on', c === t)); }
+      $('[data-ok]', o).disabled = !(day && time);
+      if (e.target.closest('[data-ok]') && day && time) { o.remove(); toast('f2', `นัดดูบ้าน ${thDay(day)} เวลา ${time} น. แล้ว เจ้าหน้าที่จะติดต่อยืนยัน`); }
+    });
+  }
+  document.addEventListener('loancap', render);
+  render();
+}
+
+/* =========================================================
+   3) คลังเอกสารดิจิทัล
+   ========================================================= */
+const DOCS = [
+  { t: 'tax', n: 'หนังสือรับรองดอกเบี้ยเงินกู้ ปีภาษี 2568', y: 2568, d: '10 ม.ค. 2569', amt: 64210 },
+  { t: 'tax', n: 'หนังสือรับรองดอกเบี้ยเงินกู้ ปีภาษี 2567', y: 2567, d: '12 ม.ค. 2568', amt: 66180 },
+  { t: 'tax', n: 'หนังสือรับรองดอกเบี้ยเงินกู้ ปีภาษี 2566', y: 2566, d: '11 ม.ค. 2567', amt: 67950 },
+  { t: 'contract', n: 'สัญญากู้เงินเพื่อที่อยู่อาศัย', y: 2562, d: '3 มิ.ย. 2562' },
+  { t: 'contract', n: 'สัญญาจำนองที่ดินพร้อมสิ่งปลูกสร้าง', y: 2562, d: '3 มิ.ย. 2562' },
+  { t: 'statement', n: 'Statement สินเชื่อ ส.ค. 2569', y: 2569, d: '1 ก.ย. 2569' },
+  { t: 'statement', n: 'Statement สินเชื่อ ก.ค. 2569', y: 2569, d: '1 ส.ค. 2569' },
+  { t: 'statement', n: 'ตารางผ่อนชำระ (ฉบับปรับปรุง)', y: 2569, d: '2 ม.ค. 2569' },
+  { t: 'receipt', n: 'ใบเสร็จรับเงินค่างวด ส.ค. 2569', y: 2569, d: '5 ส.ค. 2569', amt: S.loan.pay },
+  { t: 'receipt', n: 'ใบเสร็จรับเงินค่างวด ก.ค. 2569', y: 2569, d: '5 ก.ค. 2569', amt: S.loan.pay }
+];
+const DOC_T = { all: 'ทั้งหมด', tax: 'ภาษี', contract: 'สัญญา', statement: 'Statement', receipt: 'ใบเสร็จ' };
+const DOC_AB = { tax: 'TAX', contract: 'สัญญา', statement: 'STM', receipt: 'ใบเสร็จ' };
+function f3(el) {
+  const st = { t: 'all', y: 'all', q: '' };
+  const years = [...new Set(DOCS.map(d => d.y))].sort((a, b) => b - a);
+  const taxSeason = TODAY.getMonth() <= 2;
+  el.innerHTML = `<div class="card hcard"><div class="row" style="padding:0;align-items:flex-start"><div><b>หนังสือรับรองดอกเบี้ยปีภาษี 2568 พร้อมแล้ว</b><div class="muted" style="font-size:12.5px">ใช้ลดหย่อนภาษีดอกเบี้ยบ้านได้สูงสุด 100,000 บาท</div></div>${svg(IC.doc, 26)}</div>
+      <button class="btn btn-sm" style="background:#fff;color:var(--brand-600);margin-top:10px" data-open="0">เปิดเอกสาร</button>
+      ${taxSeason ? '' : '<div class="muted" style="font-size:11px;margin-top:8px">* การ์ดนี้จะแสดงอัตโนมัติช่วง ม.ค.–มี.ค.</div>'}</div>
+    <input class="inp" type="search" placeholder="ค้นหาเอกสาร" aria-label="ค้นหาเอกสาร" id="f3-q">
+    <div class="chips" id="f3-t">${Object.entries(DOC_T).map(([k, l]) => `<button class="chip ${k === 'all' ? 'on' : ''}" data-t="${k}">${l}</button>`).join('')}</div>
+    <div class="row" style="padding:0"><span class="sec-title" id="f3-count"></span>
+      <select class="inp" style="width:auto;padding:5px 8px;font-size:12.5px" id="f3-y" aria-label="กรองตามปี"><option value="all">ทุกปี</option>${years.map(y => `<option value="${y}">พ.ศ. ${y}</option>`).join('')}</select></div>
+    <div class="card" style="padding:4px 14px" id="f3-list"></div>`;
+  function render() {
+    const items = DOCS.map((d, i) => ({ ...d, i })).filter(d => (st.t === 'all' || d.t === st.t) && (st.y === 'all' || d.y === +st.y) && d.n.toLowerCase().includes(st.q.toLowerCase()));
+    $('#f3-count', el).textContent = `${items.length} เอกสาร`;
+    $('#f3-list', el).innerHTML = items.length ? items.map(d => `<button class="doc" data-open="${d.i}"><span class="doc-ic">${DOC_AB[d.t]}</span><span style="flex:1"><b style="font-weight:600">${d.n}</b><br><span class="fine">ออกเมื่อ ${d.d} · PDF</span></span>${svg('<path d="M9 6l6 6-6 6"/>', 16)}</button>`).join('') : '<div class="empty">ไม่พบเอกสาร</div>';
+  }
+  el.addEventListener('input', e => { if (e.target.id === 'f3-q') { st.q = e.target.value; render(); } });
+  el.addEventListener('change', e => { if (e.target.id === 'f3-y') { st.y = e.target.value; render(); } });
+  el.addEventListener('click', e => {
+    const t = e.target.closest('[data-t]');
+    if (t) { st.t = t.dataset.t; $$('#f3-t .chip', el).forEach(c => c.classList.toggle('on', c === t)); render(); }
+    const o = e.target.closest('[data-open]');
+    if (o) preview(DOCS[+o.dataset.open]);
+  });
+  function docText(d) {
+    return `${d.n}\n\n(เอกสารตัวอย่างจากต้นแบบแนวคิด ไม่ใช่เอกสารจริง)\n\nผู้กู้: สมชาย ตัวอย่าง\nเลขที่สัญญา: ${S.loan.no}\nวันที่ออกเอกสาร: ${d.d}\n${d.amt ? 'จำนวนเงิน: ' + fmt(d.amt) + ' บาท\n' : ''}`;
+  }
+  function preview(d) {
+    const o = sheet('f3', `<h5>${d.n}</h5>
+      <div class="paper"><h6>${d.n}</h6><div>ผู้กู้: สมชาย ตัวอย่าง</div><div>เลขที่สัญญา: ${S.loan.no}</div><div>วันที่ออกเอกสาร: ${d.d}</div>
+      ${d.amt ? `<div>จำนวนเงิน: <b>${fmt(d.amt)} บาท</b></div>` : ''}<div class="fine" style="margin-top:8px">เอกสารตัวอย่าง ไม่ใช่เอกสารจริง</div></div>
+      <button class="btn btn-primary btn-block" data-dl>ดาวน์โหลด</button>
+      <div class="cta-bar" style="margin-top:0"><button class="btn btn-ghost" data-share>แชร์</button><button class="btn btn-ghost" data-mail>ส่งเข้าอีเมล</button></div>`);
+    o.addEventListener('click', async e => {
+      if (e.target.closest('[data-dl]')) {
+        const blob = new Blob(['﻿' + docText(d)], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'ตัวอย่าง-' + d.n.replace(/\s+/g, '-') + '.txt';
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        toast('f3', 'ดาวน์โหลดไฟล์ตัวอย่างแล้ว');
+      }
+      if (e.target.closest('[data-share]')) {
+        try { if (navigator.share) { await navigator.share({ title: d.n, text: docText(d) }); } else { await navigator.clipboard.writeText(docText(d)); toast('f3', 'คัดลอกข้อมูลเอกสารแล้ว'); } }
+        catch (_) { toast('f3', 'ยกเลิกการแชร์'); }
+      }
+      if (e.target.closest('[data-mail]')) { o.remove(); toast('f3', 'ส่งเอกสารไปยังอีเมลที่ลงทะเบียนไว้แล้ว (จำลอง)'); }
+    });
+  }
+  render();
+}
+
+/* =========================================================
+   4) ขอปรับโครงสร้างหนี้ / พักชำระ
+   ========================================================= */
+function f4(el) {
+  const L = S.loan, base = L.pay, baseInt = base * L.monthsLeft - L.balance;
+  const OPTS = [
+    { k: 'extend', name: 'ขยายระยะเวลาผ่อน 5 ปี', desc: 'ค่างวดลดลงตลอดสัญญา', calc() { const n = L.monthsLeft + 60, p = pmt(L.balance, L.rate, n); return { first: p, after: p, months: n, interest: p * n - L.balance, note: 'ค่างวดใหม่เท่ากันทุกงวด' }; } },
+    { k: 'hold', name: 'พักชำระเงินต้น 6 เดือน', desc: 'จ่ายเฉพาะดอกเบี้ยชั่วคราว', calc() { const i6 = L.balance * L.rate / 1200, n = L.monthsLeft - 6, p = pmt(L.balance, L.rate, n); return { first: i6, after: p, months: L.monthsLeft, interest: i6 * 6 + p * n - L.balance, note: '6 เดือนแรกจ่ายเฉพาะดอกเบี้ย' }; } },
+    { k: 'reduce', name: 'ลดค่างวด 30% นาน 12 เดือน', desc: 'ผ่อนเบาลงช่วงสั้น แล้วกลับมาปกติ', calc() { const r = L.rate / 1200; let b = L.balance, i = 0; const p1 = base * 0.7; for (let m = 0; m < 12; m++) { const x = b * r; i += x; b = b + x - p1; } const n = L.monthsLeft - 12, p2 = pmt(b, L.rate, n); return { first: p1, after: p2, months: L.monthsLeft, interest: i + p2 * n - b, note: '12 เดือนแรกจ่าย 70% ของค่างวดเดิม' }; } }
+  ];
+  const st = { overdue: false, sel: 'extend', submitted: false, stage: 0 };
+  const STAGES = ['ยื่นคำขอแล้ว', 'เจ้าหน้าที่พิจารณา', 'แจ้งผลการพิจารณา', 'ลงนามเงื่อนไขใหม่', 'มีผลบังคับใช้'];
+  function render() {
+    if (st.submitted) {
+      const o = OPTS.find(x => x.k === st.sel);
+      el.innerHTML = `<div class="alert alert-ok"><b>ส่งคำขอเรียบร้อย</b><br>มาตรการ: ${o.name}<br>เลขที่คำขอ: REQ-${String(TODAY.getTime()).slice(-6)}</div>
+        <div class="card"><div class="q" style="margin-bottom:10px">สถานะคำขอ</div><ol class="timeline">${STAGES.map((s, i) => `<li class="${i < st.stage ? 'done' : i === st.stage ? 'cur' : ''}"><b>${s}</b><small>${i < st.stage ? 'เสร็จแล้ว' : i === st.stage ? 'กำลังดำเนินการ' : 'รอดำเนินการ'}</small></li>`).join('')}</ol>
+        <button class="btn btn-ghost btn-sm btn-block" data-next ${st.stage >= STAGES.length - 1 ? 'disabled' : ''}>จำลอง: ไปขั้นถัดไป</button></div>
+        <button class="btn btn-ghost btn-block" data-restart>เริ่มใหม่</button>`;
+      return;
+    }
+    const sel = OPTS.find(x => x.k === st.sel), r = sel.calc();
+    el.innerHTML = `<label class="card row" style="padding:10px 14px"><span style="font-size:13px">จำลองสถานะค้างชำระ 1 งวด</span><span class="switch"><input type="checkbox" data-od ${st.overdue ? 'checked' : ''}><span></span></span></label>
+      ${st.overdue ? `<div class="alert alert-warn"><b>งวดเดือนนี้ยังไม่ได้ชำระ</b><br>หากมีปัญหาด้านการเงิน เรามีทางเลือกช่วยให้ผ่อนต่อได้ ไม่มีค่าธรรมเนียมในการยื่นคำขอ</div>` : ''}
+      <div class="card"><div class="q">เราพร้อมช่วยคุณ</div><p class="muted" style="font-size:13px">เลือกทางที่เหมาะกับสถานการณ์ของคุณ แล้วดูผลเปรียบเทียบก่อนตัดสินใจ</p>
+        <div class="rows" style="margin-top:6px"><div class="row"><span class="muted">ยอดคงเหลือ</span><b>${fmt(L.balance)} บาท</b></div><div class="row"><span class="muted">ค่างวดปัจจุบัน</span><b>${fmt(base)} บาท</b></div><div class="row"><span class="muted">ระยะเวลาคงเหลือ</span><b>${ym(L.monthsLeft)}</b></div></div></div>
+      <div class="sec-title">มาตรการที่คุณมีสิทธิ์</div>
+      <div class="stack" role="radiogroup">${OPTS.map(o => `<button class="opt ${o.k === st.sel ? 'on' : ''}" data-opt="${o.k}" role="radio" aria-checked="${o.k === st.sel}"><b>${o.name}</b><br><span class="muted">${o.desc}</span></button>`).join('')}</div>
+      <div class="card"><div class="q" style="margin-bottom:4px">เทียบกับปัจจุบัน</div><table class="mini"><thead><tr><th></th><th>ปัจจุบัน</th><th>หลังปรับ</th></tr></thead><tbody>
+        <tr><td>ค่างวดช่วงแรก</td><td>${fmt(base)}</td><td><b style="color:var(--ok)">${fmt(r.first)}</b></td></tr>
+        <tr><td>ค่างวดหลังจากนั้น</td><td>${fmt(base)}</td><td>${fmt(r.after)}</td></tr>
+        <tr><td>ระยะเวลาคงเหลือ</td><td>${ym(L.monthsLeft)}</td><td>${ym(r.months)}</td></tr>
+        <tr><td>ดอกเบี้ยรวม</td><td>${fmt(baseInt)}</td><td>${fmt(r.interest)}</td></tr></tbody></table>
+        <p class="fine" style="margin-top:6px">${r.note} · ดอกเบี้ยรวม${r.interest >= baseInt ? 'เพิ่มขึ้น' : 'ลดลง'} ${fmt(Math.abs(r.interest - baseInt))} บาท</p></div>
+      <button class="btn btn-primary btn-block" data-submit>ยื่นคำขอมาตรการนี้</button>`;
+  }
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.opt) { st.sel = b.dataset.opt; render(); }
+    else if (b.hasAttribute('data-submit')) signSheet();
+    else if (b.hasAttribute('data-next')) { st.stage = Math.min(st.stage + 1, STAGES.length - 1); render(); pushNote('f4', 'อัปเดตสถานะคำขอ', STAGES[st.stage]); }
+    else if (b.hasAttribute('data-restart')) { st.submitted = false; st.stage = 0; render(); }
+  });
+  el.addEventListener('change', e => { if (e.target.matches('[data-od]')) { st.overdue = e.target.checked; render(); } });
+  function signSheet() {
+    const o = sheet('f4', `<h5>ยืนยันคำขอ</h5><div class="muted">${OPTS.find(x => x.k === st.sel).name}</div>
+      <label class="check"><input type="checkbox" id="f4-ok"> ข้าพเจ้ารับทราบว่าเงื่อนไขใหม่จะมีผลเมื่อธนาคารอนุมัติ และอาจทำให้ดอกเบี้ยรวมเปลี่ยนแปลง</label>
+      <span class="lbl" style="margin-bottom:0">ลงลายมือชื่อ (e-Signature)</span><canvas class="sig" id="f4-sig" aria-label="พื้นที่ลงลายมือชื่อ"></canvas>
+      <button class="link-btn" data-clear style="align-self:flex-start">ล้างลายเซ็น</button>
+      <button class="btn btn-primary btn-block" data-send disabled>ส่งคำขอ</button>`);
+    const cv = $('#f4-sig', o), ctx = cv.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; ctx.scale(dpr, dpr);
+    ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.strokeStyle = '#1C2430';
+    let drawing = false, signed = false;
+    const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const upd = () => { $('[data-send]', o).disabled = !(signed && $('#f4-ok', o).checked); };
+    cv.addEventListener('pointerdown', e => { drawing = true; cv.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.moveTo(...pos(e)); });
+    cv.addEventListener('pointermove', e => { if (!drawing) return; ctx.lineTo(...pos(e)); ctx.stroke(); signed = true; });
+    cv.addEventListener('pointerup', () => { drawing = false; upd(); });
+    $('#f4-ok', o).addEventListener('change', upd);
+    o.addEventListener('click', e => {
+      if (e.target.closest('[data-clear]')) { ctx.clearRect(0, 0, cv.width, cv.height); signed = false; upd(); }
+      if (e.target.closest('[data-send]')) { o.remove(); st.submitted = true; st.stage = 0; render(); toast('f4', 'ส่งคำขอแล้ว คุณจะได้รับแจ้งเตือนทุกครั้งที่สถานะเปลี่ยน'); }
+    });
+  }
+  render();
+}
+
+/* =========================================================
+   5) เป้าออมเงินดาวน์บ้าน
+   ========================================================= */
+function f5(el) {
+  const PICS = [['#F3B77A', 'บ้านเดี่ยว'], ['#8DB8E0', 'ทาวน์โฮม'], ['#A9CF95', 'คอนโด']];
+  const st = { name: 'บ้านหลังแรก', price: 2500000, down: 10, months: 36, saved: 45000, pic: 0, day: 25, hit: new Set() };
+  const C = 2 * Math.PI * 52;
+  function render() {
+    const target = st.price * st.down / 100;
+    const pct = Math.min(100, st.saved / target * 100);
+    const left = Math.max(0, target - st.saved);
+    const monthly = st.months > 0 ? left / st.months : left;
+    [25, 50, 75, 100].forEach(m => { if (pct >= m && !st.hit.has(m)) { st.hit.add(m); if (m > 25 || st.saved > 45000) toast('f5', m === 100 ? 'ยินดีด้วย! ออมเงินดาวน์ครบแล้ว' : `เก่งมาก! ออมได้ ${m}% ของเป้าหมายแล้ว`); } });
+    el.innerHTML = `<div class="card prop"><div class="ph" style="background:${PICS[st.pic][0]};height:90px">${house(PICS[st.pic][0])}</div>
+      <div class="pb"><div class="row" style="padding:0"><b>${esc(st.name)}</b><button class="link-btn" data-edit>แก้ไข</button></div>
+      <div class="fine">ราคาบ้าน ${fmt(st.price)} บาท · เงินดาวน์ ${st.down}%</div></div></div>
+      <div class="card"><div class="ring-wrap"><svg width="150" height="150" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" stroke="#EDEEF1" stroke-width="10" fill="none"/>
+        <circle cx="60" cy="60" r="52" stroke="${pct >= 100 ? '#157347' : '#E36F0C'}" stroke-width="10" fill="none" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct / 100)}" style="transition:stroke-dashoffset .7s ease"/></svg>
+        <div class="ring-label"><b>${fmt(pct, 0)}%</b><span class="fine">ของเป้าหมาย</span></div></div>
+        <div class="rows"><div class="row"><span class="muted">ออมแล้ว</span><b>${fmt(st.saved)} บาท</b></div><div class="row"><span class="muted">เป้าหมาย</span><b>${fmt(target)} บาท</b></div>
+        <div class="row"><span class="muted">ต้องออมต่อเดือน</span><b style="color:var(--brand-600)">${fmt(monthly)} บาท</b></div><div class="row"><span class="muted">ตัดเงินอัตโนมัติ</span><b>ทุกวันที่ ${st.day}</b></div>
+        <div class="row"><span class="muted">เหลือเวลา</span><b>${ym(st.months)}</b></div></div></div>
+      <div class="ms">${[25, 50, 75, 100].map(m => `<div class="${pct >= m ? 'on' : ''}">${pct >= m ? '✓ ' : ''}${m}%</div>`).join('')}</div>
+      ${pct >= 100
+        ? `<div class="alert alert-ok"><b>ออมครบแล้ว!</b> คุณได้รับสิทธิ์ดอกเบี้ยพิเศษเมื่อยื่นกู้ภายใน 90 วัน (ตัวอย่างสิทธิประโยชน์)</div><a class="btn btn-primary btn-block" href="#f1">เริ่มขอสินเชื่อ</a><button class="btn btn-ghost btn-block" data-reset>เริ่มเป้าหมายใหม่</button>`
+        : `<button class="btn btn-primary btn-block" data-save>จำลองออมเพิ่ม 1 เดือน (+${fmt(Math.max(monthly, 1000))})</button>`}`;
+  }
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.hasAttribute('data-save')) { const target = st.price * st.down / 100; const m = Math.max((target - st.saved) / Math.max(st.months, 1), 1000); st.saved = Math.min(target, st.saved + m); st.months = Math.max(0, st.months - 1); render(); }
+    else if (b.hasAttribute('data-reset')) { Object.assign(st, { saved: 0, months: 36 }); st.hit = new Set(); render(); }
+    else if (b.hasAttribute('data-edit')) editSheet();
+  });
+  function editSheet() {
+    let pic = st.pic;
+    const o = sheet('f5', `<h5>แก้ไขเป้าหมาย</h5>
+      <span class="lbl" style="margin-top:0">ภาพบ้านในฝัน</span><div class="chips">${PICS.map((p, i) => `<button class="chip ${i === pic ? 'on' : ''}" data-pic="${i}"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${p[0]};margin-right:4px"></span>${p[1]}</button>`).join('')}</div>
+      <span class="lbl">ชื่อเป้าหมาย</span><input class="inp" id="f5-n" value="${esc(st.name)}" maxlength="40">
+      <span class="lbl">ราคาบ้าน (บาท)</span><input class="inp" id="f5-p" type="number" min="300000" step="50000" value="${st.price}">
+      <span class="lbl">สัดส่วนเงินดาวน์</span><select class="inp" id="f5-d">${[5, 10, 15, 20].map(v => `<option value="${v}" ${v === st.down ? 'selected' : ''}>${v}%</option>`).join('')}</select>
+      <span class="lbl">ระยะเวลา (เดือน)</span><input class="inp" id="f5-m" type="number" min="1" max="120" value="${st.months}">
+      <span class="lbl">วันที่ตัดเงินอัตโนมัติ</span><select class="inp" id="f5-day">${[1, 5, 10, 15, 25, 28].map(v => `<option ${v === st.day ? 'selected' : ''}>${v}</option>`).join('')}</select>
+      <button class="btn btn-primary btn-block" data-ok>บันทึก</button>`);
+    o.addEventListener('click', e => {
+      const p = e.target.closest('[data-pic]');
+      if (p) { pic = +p.dataset.pic; $$('[data-pic]', o).forEach(c => c.classList.toggle('on', c === p)); }
+      if (e.target.closest('[data-ok]')) {
+        st.pic = pic; st.name = $('#f5-n', o).value.trim() || 'บ้านหลังแรก';
+        st.price = Math.max(300000, +$('#f5-p', o).value || st.price); st.down = +$('#f5-d', o).value;
+        st.months = Math.min(120, Math.max(1, +$('#f5-m', o).value || 36)); st.day = +$('#f5-day', o).value;
+        st.hit = new Set([25, 50, 75, 100].filter(m => st.saved / (st.price * st.down / 100) * 100 >= m));
+        o.remove(); render(); toast('f5', 'บันทึกเป้าหมายแล้ว');
+      }
+    });
+  }
+  st.hit = new Set([25, 50, 75, 100].filter(m => st.saved / (st.price * st.down / 100) * 100 >= m));
+  render();
+}
+FEATURES.push(
+  { id: 'f6', title: 'ตั้งค่าตัดบัญชีและเตือนวันผ่อน', tab: 'acct', app: 'ตั้งค่าการชำระ',
+    where: ['แท็บ บัญชี', 'สินเชื่อ', 'ตั้งค่าการชำระ'],
+    note: 'และการ์ดนับถอยหลังวันผ่อนบนหน้าแรก',
+    desc: 'ผูกบัญชีตัดค่างวดอัตโนมัติ รวมถึงบัญชีธนาคารอื่น เลือกวันแจ้งเตือนล่วงหน้า และเตือนเมื่อยอดเงินไม่พอก่อนวันตัดเงิน เพื่อลดการชำระล่าช้าโดยไม่ตั้งใจ',
+    ux: ['เปิดหรือปิดด้วย Toggle และเลือกแจ้งเตือนล่วงหน้า 1 / 3 / 7 วันด้วย Chip',
+         'การ์ดนับถอยหลังแสดงจำนวนวัน ยอดชำระ และวันที่ตัดเงินอย่างชัดเจน',
+         'ยอดไม่พอ: แสดงคำเตือนพร้อมปุ่ม "โอนเงินเข้า" ที่ทำรายการต่อได้ทันที'],
+    kpi: ['อัตราชำระตรงเวลา', 'สัดส่วนสินเชื่อที่ตั้งตัดบัญชี'],
+    tryit: 'ลองเปลี่ยนเป็นบัญชีธนาคารอื่นที่ยอดไม่พอ แล้วกด "โอนเงินเข้า" หรือ "ดูตัวอย่างแจ้งเตือน"' },
+  { id: 'f7', title: 'จัดการผู้กู้ร่วมและบัญชีครอบครัว', tab: 'me', app: 'ผู้กู้ร่วมและครอบครัว',
+    where: ['แท็บ โปรไฟล์', 'ผู้กู้ร่วม/ครอบครัว'],
+    note: 'และแสดงในหน้ารายละเอียดสินเชื่อ',
+    desc: 'ผู้กู้ร่วม เช่น คู่สมรสหรือพี่น้อง ดูสถานะสินเชื่อเดียวกันได้ จ่ายค่างวดแทนกันได้ และได้รับแจ้งเตือนพร้อมกัน โดยผู้กู้หลักกำหนดสิทธิ์ของแต่ละคนได้',
+    ux: ['เชิญด้วยลิงก์หรือ QR และต้องยืนยันตัวตนก่อนเข้าถึงข้อมูล',
+         'รูปโปรไฟล์ผู้ร่วมกู้ซ้อนกันบนการ์ดสินเชื่อ',
+         'ประวัติการจ่ายบอกว่าใครจ่ายงวดไหน',
+         'กำหนดสิทธิ์ได้ละเอียด: ดูได้อย่างเดียว หรือ ดูและจ่ายได้'],
+    kpi: ['จำนวนผู้ใช้ต่อสินเชื่อ', 'อัตราชำระตรงเวลาของสินเชื่อร่วม'],
+    tryit: 'ลองสลับ "ดูในมุมมองของ" เป็นผู้ที่ดูได้อย่างเดียว แล้วลองเชิญผู้กู้ร่วมใหม่' },
+  { id: 'f8', title: 'ประกันบ้านและประกันคุ้มครองสินเชื่อ', tab: 'house', app: 'ประกันของบ้านฉัน',
+    where: ['แท็บ บ้าน', 'ประกันของบ้านฉัน'],
+    note: '',
+    desc: 'ดูกรมธรรม์ประกันอัคคีภัยและประกันชีวิตคุ้มครองสินเชื่อ (MRTA) เตือนก่อนครบกำหนด ต่ออายุและชำระเบี้ยในแอป และแจ้งเคลมเบื้องต้นพร้อมรูปถ่าย',
+    ux: ['การ์ดกรมธรรม์แสดงวันหมดอายุ เหลือไม่ถึง 30 วันขึ้นป้ายสีเหลือง',
+         'ต่ออายุจบใน 3 หน้า: ตรวจข้อมูล → เลือกแผน → ชำระ',
+         'แจ้งเคลมด้วยการถ่ายรูป ระบบบันทึกเวลาและพิกัดให้อัตโนมัติ'],
+    kpi: ['อัตราต่ออายุกรมธรรม์', 'เวลาเฉลี่ยในการแจ้งเคลม'],
+    tryit: 'ลองต่ออายุประกันอัคคีภัยที่ใกล้หมด หรือแจ้งเคลมพร้อมแนบรูป' },
+  { id: 'f9', title: 'บริการดูแลบ้าน (Home Services)', tab: 'house', app: 'ดูแลบ้าน',
+    where: ['แท็บ บ้าน', 'ดูแลบ้าน'],
+    note: 'ตารางไอคอนหมวดบริการจากพาร์ทเนอร์',
+    desc: 'จองช่างซ่อม ทำความสะอาด หรือติดตั้งโซลาร์เซลล์ผ่านพาร์ทเนอร์ งานที่มีค่าใช้จ่ายสูงเสนอสินเชื่อซ่อมแซมหรือต่อเติมบ้านระหว่างขั้นตอน และตั้งเตือนภาษีที่ดินประจำปี',
+    ux: ['ตารางไอคอน 2×4 แยกหมวดบริการ',
+         'การจองเป็นขั้นตอน: เลือกบริการ → เลือกวันเวลา → ยืนยัน',
+         'งานราคาสูงแสดงตัวเลือก "ผ่อนผ่านสินเชื่อซ่อมแซม" พร้อมค่างวดโดยประมาณ',
+         'งานเสร็จแล้วให้คะแนนช่างได้'],
+    kpi: ['ยอดจองบริการต่อเดือน', 'ยอดสินเชื่อซ่อมแซมที่มาจากแอป'],
+    tryit: 'ลองจอง "โซลาร์เซลล์" เพื่อดูตัวเลือกผ่อน แล้วกด "จำลอง: งานเสร็จ" เพื่อให้คะแนน' },
+  { id: 'f10', title: 'แจ้งเตือนอัจฉริยะและวางแผนสินเชื่อ (Smart Insights)', tab: 'home', app: 'หน้าแรก',
+    where: ['หน้าแรก', 'การ์ด Insights แบบปัด'],
+    note: 'และศูนย์แจ้งเตือน',
+    desc: 'ระบบวิเคราะห์สินเชื่อของผู้ใช้และแนะนำเชิงรุก เช่น ดอกเบี้ยคงที่ใกล้หมด การโปะเพิ่มช่วยประหยัดเท่าไร ดอกเบี้ยที่ใช้ลดหย่อนภาษีได้ และโครงการที่อาจเข้าเกณฑ์',
+    ux: ['การ์ดหนึ่งใบมีหนึ่งข้อความหลัก หนึ่งตัวเลข และหนึ่งปุ่ม',
+         'กด "ไม่สนใจ" เพื่อซ่อนการ์ด และใช้ข้อมูลนี้ปรับคำแนะนำครั้งต่อไป',
+         'ผู้ใช้เลือกประเภทและความถี่ของการแจ้งเตือนเองได้'],
+    kpi: ['อัตราคลิกการ์ด', 'อัตรารักษาสินเชื่อเมื่อดอกเบี้ยคงที่หมด'],
+    tryit: 'ลองปัดการ์ด เลื่อนแถบโปะเพิ่ม กด "ไม่สนใจ" หรือปิดประเภทแจ้งเตือน' }
+);
+
+/* =========================================================
+   6) ตัดบัญชีอัตโนมัติและเตือนวันผ่อน
+   ========================================================= */
+function f6(el) {
+  const st = { on: true, acct: 0, remind: 3, low: true,
+    accts: [{ name: 'ออมทรัพย์ ••• 4821', bank: 'บัญชีในแอปนี้', bal: 12500 }, { name: 'ธนาคารอื่น ••• 7730', bank: 'ผูกผ่านระบบตัดบัญชี', bal: 3200 }] };
+  const inst = S.loan.pay;
+  const due = (() => { const d = new Date(TODAY.getFullYear(), TODAY.getMonth(), 5); if (TODAY.getDate() >= 5) d.setMonth(d.getMonth() + 1); return d; })();
+  const days = Math.ceil((due - new Date(TODAY.toDateString())) / 864e5);
+  function render() {
+    const a = st.accts[st.acct], short = st.on && a.bal < inst;
+    el.innerHTML = `<div class="card hcard"><div class="muted" style="font-size:12.5px">ค่างวดถัดไป · ${S.loan.no}</div>
+        <div class="row" style="padding:4px 0 0;align-items:flex-end"><div><div class="big-val" style="color:#fff">${fmt(inst)} <small style="color:rgba(255,255,255,.85)">บาท</small></div><div style="font-size:12.5px">ครบกำหนด ${thDate(due)}</div></div>
+        <div class="center"><div style="font-size:30px;font-weight:700;line-height:1">${days}</div><div style="font-size:11.5px">วัน</div></div></div></div>
+      ${short && st.low ? `<div class="alert alert-warn"><b>ยอดเงินไม่พอตัดค่างวด</b><br>บัญชี ${a.name} มี ${fmt(a.bal)} บาท ขาดอีก ${fmt(inst - a.bal)} บาท<button class="btn btn-primary btn-sm btn-block" style="margin-top:8px" data-topup>โอนเงินเข้า</button></div>` : ''}
+      <div class="card"><label class="row" style="padding-top:0"><span><b>ตัดค่างวดอัตโนมัติ</b><br><span class="fine">ตัดเงินทุกวันที่ 5 ของเดือน</span></span><span class="switch"><input type="checkbox" data-k="on" ${st.on ? 'checked' : ''}><span></span></span></label>
+        ${st.on ? `<span class="lbl">บัญชีที่ใช้ตัดเงิน</span><div class="stack" role="radiogroup">${st.accts.map((x, i) => `<button class="opt ${i === st.acct ? 'on' : ''}" data-acct="${i}" role="radio" aria-checked="${i === st.acct}"><div class="row" style="padding:0"><span><b>${x.name}</b><br><span class="fine">${x.bank}</span></span><span>${fmt(x.bal)} ฿</span></div></button>`).join('')}</div>` : '<div class="alert alert-soft">ปิดตัดบัญชีอัตโนมัติแล้ว คุณต้องชำระเองก่อนวันครบกำหนด</div>'}</div>
+      <div class="card"><b>แจ้งเตือนล่วงหน้า</b><div class="chips" style="margin-top:8px">${[1, 3, 7].map(d => `<button class="chip ${d === st.remind ? 'on' : ''}" data-rm="${d}">${d} วัน</button>`).join('')}</div>
+        <label class="row" style="margin-top:6px"><span style="font-size:13px">เตือนเมื่อยอดเงินไม่พอก่อนวันตัดเงิน</span><span class="switch"><input type="checkbox" data-k="low" ${st.low ? 'checked' : ''}><span></span></span></label>
+        <button class="btn btn-ghost btn-sm btn-block" data-demo>${svg(IC.bell, 16)} ดูตัวอย่างแจ้งเตือน</button></div>`;
+  }
+  el.addEventListener('change', e => { const k = e.target.dataset.k; if (k) { st[k] = e.target.checked; render(); toast('f6', 'บันทึกการตั้งค่าแล้ว'); } });
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.acct) { st.acct = +b.dataset.acct; render(); }
+    else if (b.dataset.rm) { st.remind = +b.dataset.rm; render(); toast('f6', `จะแจ้งเตือนก่อนวันผ่อน ${st.remind} วัน`); }
+    else if (b.hasAttribute('data-demo')) {
+      const a = st.accts[st.acct];
+      if (st.on && a.bal < inst && st.low) pushNote('f6', 'ยอดเงินไม่พอตัดค่างวด', `อีก ${st.remind} วันถึงวันตัดเงิน กรุณาโอนเข้าอีก ${fmt(inst - a.bal)} บาท`);
+      else pushNote('f6', `อีก ${st.remind} วันถึงวันผ่อน`, `ค่างวด ${fmt(inst)} บาท ครบกำหนด ${thDate(due)}`);
+    }
+    else if (b.hasAttribute('data-topup')) topup();
+  });
+  function topup() {
+    const a = st.accts[st.acct], need = inst - a.bal;
+    const o = sheet('f6', `<h5>โอนเงินเข้า ${a.name}</h5><span class="lbl" style="margin-top:0">จำนวนเงิน (บาท)</span>
+      <input class="inp" type="number" id="f6-amt" min="1" value="${Math.ceil(need)}"><div class="fine">แนะนำอย่างน้อย ${fmt(need)} บาท ให้พอตัดค่างวด</div>
+      <span class="lbl">โอนจาก</span><select class="inp"><option>ออมทรัพย์ ••• 9102 (บัญชีสำรอง)</option></select>
+      <button class="btn btn-primary btn-block" data-ok>ยืนยันการโอน</button>`);
+    o.addEventListener('click', e => { if (e.target.closest('[data-ok]')) { const v = Math.max(0, +$('#f6-amt', o).value || 0); a.bal += v; o.remove(); render(); toast('f6', `โอนเงิน ${fmt(v)} บาทแล้ว (จำลอง)`); } });
+  }
+  render();
+}
+
+/* =========================================================
+   7) ผู้กู้ร่วมและครอบครัว
+   ========================================================= */
+function f7(el) {
+  const PERM = { full: 'สิทธิ์เต็ม (ผู้กู้หลัก)', pay: 'ดูและจ่ายได้', view: 'ดูได้อย่างเดียว' };
+  const COLORS = ['#E36F0C', '#2F6FB0', '#7A4FB5', '#157347', '#B42318'];
+  const st = {
+    members: [{ name: 'สมชาย', role: 'ผู้กู้หลัก', perm: 'full', status: 'active' }, { name: 'สมหญิง', role: 'ผู้กู้ร่วม (คู่สมรส)', perm: 'pay', status: 'active' }, { name: 'สมศักดิ์', role: 'ผู้กู้ร่วม (พี่น้อง)', perm: 'view', status: 'active' }],
+    viewer: 0, hist: []
+  };
+  for (let i = 1; i <= 5; i++) { const d = new Date(TODAY.getFullYear(), TODAY.getMonth() - i, 5); st.hist.push({ d, who: i % 2 ? 'สมหญิง' : 'สมชาย', amt: S.loan.pay }); }
+  const av = (m, i) => `<span class="av" style="background:${COLORS[i % COLORS.length]}" title="${esc(m.name)}">${esc(m.name.slice(0, 1))}</span>`;
+  function render() {
+    const me = st.members[st.viewer], canPay = me.perm !== 'view', isMain = me.perm === 'full';
+    const active = st.members.filter(m => m.status === 'active');
+    el.innerHTML = `<div class="card" style="padding:10px 14px"><span class="lbl" style="margin-top:0">ดูในมุมมองของ (จำลอง)</span><select class="inp" id="f7-v">${active.map(m => { const i = st.members.indexOf(m); return `<option value="${i}" ${i === st.viewer ? 'selected' : ''}>${esc(m.name)} · ${PERM[m.perm]}</option>`; }).join('')}</select></div>
+      <div class="card"><div class="row" style="padding-top:0"><span><b>สินเชื่อบ้าน</b><br><span class="fine">${S.loan.no}</span></span><span class="avs">${active.map((m) => av(m, st.members.indexOf(m))).join('')}</span></div>
+        <div class="rows"><div class="row"><span class="muted">ยอดคงเหลือ</span><b>${fmt(S.loan.balance)} บาท</b></div><div class="row"><span class="muted">ค่างวด</span><b>${fmt(S.loan.pay)} บาท</b></div></div>
+        <button class="btn btn-primary btn-block" data-pay ${canPay ? '' : 'disabled'} style="margin-top:8px">จ่ายค่างวดงวดนี้</button>
+        ${canPay ? '' : '<p class="fine" style="margin-top:6px">คุณมีสิทธิ์ดูได้อย่างเดียว ขอสิทธิ์จ่ายจากผู้กู้หลักได้</p>'}</div>
+      <div class="sec-title">สมาชิก</div>
+      <div class="card" style="padding:6px 14px">${st.members.map((m, i) => `<div class="row" style="${i ? 'border-top:1px solid var(--line)' : ''}">${av(m, i)}<span style="flex:1;min-width:0"><b>${esc(m.name)}</b><br><span class="fine">${esc(m.role)}</span></span>
+        ${m.status === 'pending' ? `<span class="stack" style="gap:4px;align-items:flex-end"><span class="badge b-warn">รอยืนยันตัวตน</span>${isMain ? `<button class="link-btn" data-verify="${i}">จำลอง: ยืนยันแล้ว</button>` : ''}</span>`
+          : m.perm === 'full' ? '<span class="badge b-brand">ผู้กู้หลัก</span>'
+          : isMain ? `<select class="inp" style="width:auto;padding:4px 6px;font-size:12px" data-perm="${i}" aria-label="สิทธิ์ของ ${esc(m.name)}"><option value="pay" ${m.perm === 'pay' ? 'selected' : ''}>ดูและจ่ายได้</option><option value="view" ${m.perm === 'view' ? 'selected' : ''}>ดูได้อย่างเดียว</option></select>`
+          : `<span class="badge b-gray">${PERM[m.perm]}</span>`}</div>`).join('')}
+        ${isMain ? '<button class="btn btn-ghost btn-sm btn-block" style="margin:6px 0 8px" data-invite>+ เชิญผู้กู้ร่วม</button>' : ''}</div>
+      <div class="sec-title">ประวัติการจ่ายค่างวด</div>
+      <div class="card" style="padding:6px 12px"><table class="mini"><thead><tr><th>งวด</th><th>ผู้จ่าย</th><th>จำนวน</th></tr></thead><tbody>${st.hist.map(h => `<tr><td>${h.d.toLocaleDateString('th-TH', { month: 'short', year: '2-digit' })}</td><td>${esc(h.who)}</td><td>${fmt(h.amt)}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+  el.addEventListener('change', e => {
+    if (e.target.id === 'f7-v') { st.viewer = +e.target.value; render(); }
+    if (e.target.dataset.perm) { const m = st.members[+e.target.dataset.perm]; m.perm = e.target.value; toast('f7', `เปลี่ยนสิทธิ์ของ ${m.name} เป็น "${PERM[m.perm]}"`); render(); }
+  });
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.hasAttribute('data-pay')) { const who = st.members[st.viewer].name; st.hist.unshift({ d: new Date(TODAY.getFullYear(), TODAY.getMonth(), 5), who, amt: S.loan.pay }); render(); toast('f7', `${who} ชำระค่างวดแล้ว ผู้กู้ร่วมทุกคนได้รับแจ้งเตือน`); }
+    else if (b.dataset.verify) { st.members[+b.dataset.verify].status = 'active'; render(); toast('f7', 'ยืนยันตัวตนสำเร็จ เพิ่มเป็นผู้กู้ร่วมแล้ว'); }
+    else if (b.hasAttribute('data-invite')) invite();
+  });
+  function qr(seed) {
+    let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+    const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >> 17; h ^= h << 5; h >>>= 0; return h / 4294967296; };
+    const N = 25; let r = '';
+    const finder = (x, y) => `<rect x="${x}" y="${y}" width="7" height="7" fill="#1C2430"/><rect x="${x + 1}" y="${y + 1}" width="5" height="5" fill="#fff"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3" fill="#1C2430"/>`;
+    const inF = (x, y) => (x < 8 && y < 8) || (x > N - 9 && y < 8) || (x < 8 && y > N - 9);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!inF(x, y) && rnd() > 0.52) r += `<rect x="${x}" y="${y}" width="1" height="1" fill="#1C2430"/>`;
+    return `<svg class="qr" viewBox="-1 -1 ${N + 2} ${N + 2}" shape-rendering="crispEdges" role="img" aria-label="QR เชิญ (ตัวอย่าง)"><rect x="-1" y="-1" width="${N + 2}" height="${N + 2}" fill="#fff"/>${r}${finder(0, 0)}${finder(N - 7, 0)}${finder(0, N - 7)}</svg>`;
+  }
+  function invite() {
+    const o = sheet('f7', `<h5>เชิญผู้กู้ร่วม</h5><span class="lbl" style="margin-top:0">ชื่อ</span><input class="inp" id="f7-n" placeholder="เช่น สมปอง" maxlength="30">
+      <span class="lbl">ความสัมพันธ์</span><select class="inp" id="f7-r"><option>คู่สมรส</option><option>บิดา/มารดา</option><option>บุตร</option><option>พี่น้อง</option></select>
+      <span class="lbl">สิทธิ์</span><select class="inp" id="f7-p"><option value="view">ดูได้อย่างเดียว</option><option value="pay">ดูและจ่ายได้</option></select>
+      <div id="f7-qr"></div><button class="btn btn-primary btn-block" data-gen>สร้างลิงก์และ QR เชิญ</button>`);
+    o.addEventListener('click', e => {
+      if (e.target.closest('[data-gen]')) {
+        const n = $('#f7-n', o).value.trim(); if (!n) { $('#f7-n', o).focus(); toast('f7', 'กรุณากรอกชื่อผู้ที่ต้องการเชิญ'); return; }
+        const code = Math.random().toString(36).slice(2, 8).toUpperCase();
+        st.members.push({ name: n, role: 'ผู้กู้ร่วม (' + $('#f7-r', o).value + ')', perm: $('#f7-p', o).value, status: 'pending' });
+        $('#f7-qr', o).innerHTML = `${qr(code + n)}<div class="center fine">รหัสเชิญ <b>${code}</b> · หมดอายุใน 24 ชั่วโมง<br>ผู้ถูกเชิญต้องยืนยันตัวตนก่อนเห็นข้อมูลสินเชื่อ</div>`;
+        e.target.closest('[data-gen]').outerHTML = '<button class="btn btn-ghost btn-block" data-close>เสร็จสิ้น</button>';
+        render();
+      }
+    });
+  }
+  render();
+}
+
+/* =========================================================
+   8) ประกันบ้าน
+   ========================================================= */
+function f8(el) {
+  const st = {
+    pol: [
+      { type: 'ประกันอัคคีภัย', no: 'FI-2566-004821', sum: 1500000, exp: addDays(TODAY, 21), prem: 1850, renewable: true },
+      { type: 'ประกันชีวิตคุ้มครองสินเชื่อ (MRTA)', no: 'MR-2562-118420', sum: 1850000, exp: addDays(TODAY, 290), prem: 0, renewable: false }
+    ],
+    claims: []
+  };
+  const PLANS = [{ n: 'พื้นฐาน', p: 1850, c: 'ไฟไหม้ ฟ้าผ่า ระเบิด' }, { n: 'มาตรฐาน', p: 2650, c: 'พื้นฐาน + น้ำท่วม ลมพายุ' }, { n: 'ครอบคลุม', p: 3900, c: 'มาตรฐาน + โจรกรรม ภัยธรรมชาติ' }];
+  function render() {
+    el.innerHTML = `<div class="sec-title">กรมธรรม์ของคุณ</div>${st.pol.map((p, i) => {
+      const d = Math.ceil((p.exp - TODAY) / 864e5);
+      return `<div class="card"><div class="row" style="padding-top:0;align-items:flex-start"><span style="display:flex;gap:10px"><span class="svc" style="padding:0;border:0"><span class="ic">${svg(IC.shield)}</span></span><span><b>${p.type}</b><br><span class="fine">${p.no}</span></span></span>
+        <span class="badge ${d < 30 ? 'b-warn' : 'b-ok'}">${d < 30 ? 'เหลือ ' + d + ' วัน' : 'คุ้มครองอยู่'}</span></div>
+        <div class="rows"><div class="row"><span class="muted">ทุนประกัน</span><b>${fmt(p.sum)} บาท</b></div><div class="row"><span class="muted">สิ้นสุดความคุ้มครอง</span><b>${thDate(p.exp)}</b></div></div>
+        <div class="cta-bar">${p.renewable ? `<button class="btn ${d < 30 ? 'btn-primary' : 'btn-ghost'} btn-sm" data-renew="${i}">ต่ออายุ</button>` : '<span></span>'}<button class="btn btn-ghost btn-sm" data-claim="${i}">แจ้งเคลม</button></div></div>`;
+    }).join('')}
+    ${st.claims.length ? `<div class="sec-title">รายการเคลม</div>${st.claims.map(c => `<div class="card"><div class="row" style="padding:0"><b>${c.no}</b><span class="badge b-brand">${c.status}</span></div><div class="fine">${c.type} · ${esc(c.kind)} · ${c.time}</div>${c.img ? `<img class="thumb" style="margin-top:8px" src="${c.img}" alt="รูปความเสียหาย">` : ''}</div>`).join('')}` : ''}`;
+  }
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.renew) renew(st.pol[+b.dataset.renew]);
+    if (b.dataset.claim) claim(st.pol[+b.dataset.claim]);
+  });
+  function renew(p) {
+    let step = 1, plan = 0;
+    const o = sheet('f8', '<div id="f8-r"></div>');
+    const box = $('#f8-r', o);
+    function draw() {
+      const bar = `<div class="steps">${['ตรวจข้อมูล', 'เลือกแผน', 'ชำระเงิน'].map((s, i) => `<span class="${i < step ? 'on' : ''}">${i + 1} ${s}</span>`).join('')}</div>`;
+      if (step === 1) box.innerHTML = bar + `<h5>ตรวจข้อมูลผู้เอาประกัน</h5><div class="rows"><div class="row"><span class="muted">ผู้เอาประกัน</span><b>สมชาย ตัวอย่าง</b></div><div class="row"><span class="muted">ที่ตั้งทรัพย์</span><b>ปทุมธานี</b></div><div class="row"><span class="muted">ทุนประกันเดิม</span><b>${fmt(p.sum)} บาท</b></div></div><button class="btn btn-primary btn-block" data-s="2" style="margin-top:10px">ข้อมูลถูกต้อง</button>`;
+      if (step === 2) box.innerHTML = bar + `<h5>เลือกแผนความคุ้มครอง</h5><div class="stack">${PLANS.map((x, i) => `<button class="opt ${i === plan ? 'on' : ''}" data-plan="${i}"><div class="row" style="padding:0"><b>${x.n}</b><b>${fmt(x.p)} ฿/ปี</b></div><span class="fine">${x.c}</span></button>`).join('')}</div><div class="cta-bar"><button class="btn btn-ghost" data-s="1">ย้อนกลับ</button><button class="btn btn-primary" data-s="3">ถัดไป</button></div>`;
+      if (step === 3) box.innerHTML = bar + `<h5>ชำระเบี้ยประกัน</h5><div class="rows"><div class="row"><span class="muted">แผน</span><b>${PLANS[plan].n}</b></div><div class="row"><span class="muted">ระยะเวลา</span><b>1 ปี</b></div><div class="row"><span class="muted">ยอดชำระ</span><b style="font-size:18px">${fmt(PLANS[plan].p)} บาท</b></div></div>
+        <span class="lbl">ชำระจาก</span><select class="inp"><option>ออมทรัพย์ ••• 4821</option></select><div class="cta-bar"><button class="btn btn-ghost" data-s="2">ย้อนกลับ</button><button class="btn btn-primary" data-pay>ชำระเงิน</button></div>`;
+    }
+    o.addEventListener('click', e => {
+      const s = e.target.closest('[data-s]'), pl = e.target.closest('[data-plan]');
+      if (s) { step = +s.dataset.s; draw(); }
+      if (pl) { plan = +pl.dataset.plan; draw(); }
+      if (e.target.closest('[data-pay]')) { p.exp = addDays(p.exp, 365); p.prem = PLANS[plan].p; o.remove(); render(); toast('f8', `ต่ออายุสำเร็จ คุ้มครองถึง ${thDate(p.exp)}`); }
+    });
+    draw();
+  }
+  function claim(p) {
+    let kind = null, img = null, loc = 'ยังไม่ได้ระบุพิกัด';
+    const now = new Date();
+    const o = sheet('f8', `<h5>แจ้งเคลม · ${p.type}</h5>
+      <span class="lbl" style="margin-top:0">ประเภทความเสียหาย</span><div class="chips">${['น้ำท่วม', 'ไฟไหม้', 'ลมพายุ', 'อื่น ๆ'].map(k => `<button class="chip" data-k="${k}">${k}</button>`).join('')}</div>
+      <span class="lbl">ถ่ายรูปความเสียหาย</span><label class="btn btn-ghost btn-block" style="cursor:pointer">${svg(IC.cam, 18)} ถ่ายรูป / เลือกรูป<input type="file" accept="image/*" capture="environment" id="f8-f" hidden></label><div id="f8-prev"></div>
+      <div class="alert alert-soft" style="font-size:12px"><div>${svg(IC.check, 14)} บันทึกเวลาอัตโนมัติ: <b>${now.toLocaleString('th-TH')}</b></div><div>${svg(IC.pin, 14)} พิกัด: <b id="f8-loc">${loc}</b> <button class="link-btn" data-loc>ระบุพิกัด</button></div></div>
+      <span class="lbl">รายละเอียดเพิ่มเติม</span><textarea class="inp" rows="2" placeholder="อธิบายเหตุการณ์สั้น ๆ"></textarea>
+      <button class="btn btn-primary btn-block" data-send disabled>ส่งแจ้งเคลม</button>`);
+    const upd = () => { $('[data-send]', o).disabled = !kind; };
+    $('#f8-f', o).addEventListener('change', e => {
+      const f = e.target.files[0]; if (!f) return;
+      const r = new FileReader(); r.onload = () => { img = r.result; $('#f8-prev', o).innerHTML = `<img class="thumb" src="${img}" alt="ตัวอย่างรูปที่แนบ">`; }; r.readAsDataURL(f);
+    });
+    o.addEventListener('click', e => {
+      const k = e.target.closest('[data-k]');
+      if (k) { kind = k.dataset.k; $$('[data-k]', o).forEach(c => c.classList.toggle('on', c === k)); upd(); }
+      if (e.target.closest('[data-loc]')) {
+        const set = t => { loc = t; $('#f8-loc', o).textContent = t; };
+        if (!navigator.geolocation) return set('อุปกรณ์ไม่รองรับ');
+        set('กำลังค้นหา…');
+        navigator.geolocation.getCurrentPosition(pos => set(pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4)), () => set('ไม่ได้รับอนุญาต (ใช้ที่อยู่ตามกรมธรรม์)'), { timeout: 8000 });
+      }
+      if (e.target.closest('[data-send]') && kind) {
+        st.claims.unshift({ no: 'CLM-' + String(Date.now()).slice(-6), type: p.type, kind, time: now.toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' }), img, status: 'รับเรื่องแล้ว' });
+        o.remove(); render(); toast('f8', 'รับแจ้งเคลมแล้ว เจ้าหน้าที่จะติดต่อกลับภายใน 24 ชั่วโมง');
+      }
+    });
+  }
+  render();
+}
+
+/* =========================================================
+   9) บริการดูแลบ้าน
+   ========================================================= */
+const SERVICES = [
+  { n: 'ช่างไฟฟ้า', ic: 'bolt', p: 1500, d: 'ตรวจเช็กและซ่อมระบบไฟฟ้า' },
+  { n: 'ช่างประปา', ic: 'drop', p: 1200, d: 'ท่อรั่ว ท่อตัน ปั๊มน้ำ' },
+  { n: 'ล้างแอร์', ic: 'snow', p: 800, d: 'ล้างแอร์ติดผนัง ต่อเครื่อง' },
+  { n: 'ซ่อมหลังคา', ic: 'roof', p: 45000, d: 'หลังคารั่ว เปลี่ยนกระเบื้อง' },
+  { n: 'ทำความสะอาด', ic: 'spark', p: 1900, d: 'ทำความสะอาดทั้งหลัง 4 ชั่วโมง' },
+  { n: 'โซลาร์เซลล์', ic: 'sun', p: 159000, d: 'ติดตั้งระบบ 5 kW พร้อมอินเวอร์เตอร์' },
+  { n: 'ทาสีบ้าน', ic: 'brush', p: 38000, d: 'ทาสีภายนอกบ้าน 2 ชั้น' },
+  { n: 'กำจัดปลวก', ic: 'bug', p: 4500, d: 'อัดน้ำยาและวางเหยื่อ 1 ปี' }
+];
+function f9(el) {
+  const st = { bookings: [], tax: true };
+  const LOAN_RATE = 6, LOAN_Y = 5, THRESHOLD = 20000;
+  function render() {
+    el.innerHTML = `<div class="svc-grid">${SERVICES.map((s, i) => `<button class="svc" data-svc="${i}"><span class="ic">${svg(IC[s.ic])}</span>${s.n}</button>`).join('')}</div>
+      <div class="card"><label class="row" style="padding:0"><span><b>เตือนภาษีที่ดินและสิ่งปลูกสร้าง</b><br><span class="fine">แจ้งเตือนก่อนครบกำหนดชำระประจำปีตามที่ท้องถิ่นกำหนด</span></span><span class="switch"><input type="checkbox" data-tax ${st.tax ? 'checked' : ''}><span></span></span></label></div>
+      <div class="sec-title">การจองของฉัน</div>
+      ${st.bookings.length ? st.bookings.map((b, i) => `<div class="card"><div class="row" style="padding-top:0"><b>${b.s.n}</b><span class="badge ${b.done ? 'b-ok' : 'b-brand'}">${b.done ? 'เสร็จแล้ว' : 'นัดหมายแล้ว'}</span></div>
+        <div class="fine">${thDay(b.day)} · ${b.time} น. · ${fmt(b.s.p)} บาท${b.loan ? ' · ผ่อน ' + fmt(b.monthly) + ' บาท/เดือน' : ''}</div>
+        ${b.done ? `<div class="row" style="padding-bottom:0"><span style="font-size:13px">${b.rating ? 'ขอบคุณสำหรับคะแนน' : 'ให้คะแนนช่าง'}</span><span class="stars" role="radiogroup" aria-label="ให้คะแนน">${[1, 2, 3, 4, 5].map(n => `<button class="${n <= (b.rating || 0) ? 'on' : ''}" data-rate="${i}:${n}" aria-label="${n} ดาว">★</button>`).join('')}</span></div>`
+          : `<button class="link-btn" data-done="${i}" style="margin-top:6px">จำลอง: งานเสร็จ</button>`}</div>`).join('')
+        : '<div class="card empty">ยังไม่มีการจอง เลือกบริการด้านบนเพื่อเริ่ม</div>'}`;
+  }
+  el.addEventListener('change', e => { if (e.target.matches('[data-tax]')) { st.tax = e.target.checked; toast('f9', st.tax ? 'เปิดการเตือนภาษีที่ดินแล้ว' : 'ปิดการเตือนภาษีที่ดินแล้ว'); } });
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.svc) book(SERVICES[+b.dataset.svc]);
+    if (b.dataset.done) { st.bookings[+b.dataset.done].done = true; render(); }
+    if (b.dataset.rate) { const [i, n] = b.dataset.rate.split(':').map(Number); st.bookings[i].rating = n; render(); toast('f9', `ให้คะแนน ${n} ดาวแล้ว`); }
+  });
+  function book(s) {
+    let step = 1, day = null, time = null, loan = false;
+    const days = [1, 2, 3, 4, 5, 6, 7].map(n => addDays(TODAY, n));
+    const monthly = pmt(s.p, LOAN_RATE, LOAN_Y * 12);
+    const o = sheet('f9', '<div id="f9-b" class="stack"></div>');
+    const box = $('#f9-b', o);
+    function draw() {
+      const bar = `<div class="steps">${['เลือกบริการ', 'วันเวลา', 'ยืนยัน'].map((x, i) => `<span class="${i < step ? 'on' : ''}">${i + 1} ${x}</span>`).join('')}</div>`;
+      if (step === 1) box.innerHTML = bar + `<div class="row" style="padding:0;justify-content:flex-start;gap:12px"><span class="svc" style="padding:0;border:0"><span class="ic">${svg(IC[s.ic])}</span></span><span><h5>${s.n}</h5><span class="fine">${s.d}</span></span></div>
+        <div class="rows"><div class="row"><span class="muted">ราคาประเมินเริ่มต้น</span><b>${fmt(s.p)} บาท</b></div><div class="row"><span class="muted">ผู้ให้บริการ</span><b>พาร์ทเนอร์ที่ผ่านการคัดเลือก</b></div></div>
+        <button class="btn btn-primary btn-block" data-s="2">เลือกวันเวลา</button>`;
+      if (step === 2) box.innerHTML = bar + `<h5>เลือกวันและเวลา</h5><div class="chips">${days.map((d, i) => `<button class="chip ${day === d ? 'on' : ''}" data-d="${i}">${thDay(d)}</button>`).join('')}</div>
+        <div class="chips">${['09:00', '11:00', '13:00', '15:00'].map(t => `<button class="chip ${time === t ? 'on' : ''}" data-t="${t}">${t}</button>`).join('')}</div>
+        ${s.p >= THRESHOLD ? `<label class="opt ${loan ? 'on' : ''}" style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" data-loan ${loan ? 'checked' : ''} style="margin-top:4px;accent-color:var(--brand)"><span><b>ผ่อนผ่านสินเชื่อซ่อมแซม/ต่อเติมบ้าน</b><br><span class="fine">ประมาณ <b>${fmt(monthly)} บาท/เดือน</b> นาน ${LOAN_Y} ปี (ดอกเบี้ยสมมติ ${LOAN_RATE}% ต่อปี)</span></span></label>` : ''}
+        <div class="cta-bar"><button class="btn btn-ghost" data-s="1">ย้อนกลับ</button><button class="btn btn-primary" data-s="3" ${day && time ? '' : 'disabled'}>ถัดไป</button></div>`;
+      if (step === 3) box.innerHTML = bar + `<h5>ยืนยันการจอง</h5><div class="rows"><div class="row"><span class="muted">บริการ</span><b>${s.n}</b></div><div class="row"><span class="muted">วันเวลา</span><b>${thDay(day)} ${time} น.</b></div>
+        <div class="row"><span class="muted">ค่าบริการ</span><b>${fmt(s.p)} บาท</b></div><div class="row"><span class="muted">วิธีชำระ</span><b>${loan ? 'ผ่อน ' + fmt(monthly) + ' บาท/เดือน' : 'ชำระหลังงานเสร็จ'}</b></div></div>
+        <div class="cta-bar"><button class="btn btn-ghost" data-s="2">ย้อนกลับ</button><button class="btn btn-primary" data-ok>ยืนยันการจอง</button></div>`;
+    }
+    o.addEventListener('change', e => { if (e.target.matches('[data-loan]')) { loan = e.target.checked; draw(); } });
+    o.addEventListener('click', e => {
+      const sBtn = e.target.closest('[data-s]'), d = e.target.closest('[data-d]'), t = e.target.closest('[data-t]');
+      if (sBtn && !sBtn.disabled) { step = +sBtn.dataset.s; draw(); }
+      if (d) { day = days[+d.dataset.d]; draw(); }
+      if (t) { time = t.dataset.t; draw(); }
+      if (e.target.closest('[data-ok]')) { st.bookings.unshift({ s, day, time, loan, monthly, done: false, rating: 0 }); o.remove(); render(); toast('f9', `จอง${s.n}แล้ว ช่างจะยืนยันนัดภายใน 2 ชั่วโมง`); }
+    });
+    draw();
+  }
+  render();
+}
+
+/* =========================================================
+   10) Smart Insights
+   ========================================================= */
+function f10(el) {
+  const L = S.loan;
+  const base = payoff(L.balance, L.rate, L.pay);
+  const monthsPaid = TODAY.getMonth();                         // จำนวนงวดที่จ่ายแล้วในปีนี้ (ประมาณ)
+  const taxInt = L.balance * L.rate / 1200 * monthsPaid;
+  const fixedEnd = addDays(TODAY, 60);
+  const st = { extra: 2000, hidden: new Set(), cats: { loan: true, tax: true, promo: true }, freq: 'now' };
+  const CARDS = [
+    { k: 'fixed', cat: 'loan', badge: ['b-warn', 'ดอกเบี้ย'], title: 'ดอกเบี้ยคงที่ของคุณจะสิ้นสุดในอีก 60 วัน', body: () => `หลัง ${thDate(fixedEnd)} อัตราจะเปลี่ยนเป็นแบบลอยตัว ดูข้อเสนอลดดอกเบี้ยก่อนครบกำหนด`, cta: 'ดูข้อเสนอลดดอกเบี้ย', act: 'offer' },
+    { k: 'prepay', cat: 'loan', badge: ['b-ok', 'วางแผนโปะ'], title: 'โปะเพิ่มเดือนละนิด ผ่อนหมดเร็วขึ้น', body: () => '', cta: null },
+    { k: 'tax', cat: 'tax', badge: ['b-brand', 'ภาษี'], title: `ปีนี้คุณจ่ายดอกเบี้ยบ้านแล้วประมาณ ${fmt(taxInt)} บาท`, body: () => 'ใช้ลดหย่อนภาษีได้สูงสุด 100,000 บาท ดาวน์โหลดหนังสือรับรองได้ในคลังเอกสาร', cta: 'ไปที่คลังเอกสาร', act: 'docs' },
+    { k: 'program', cat: 'promo', badge: ['b-gray', 'โครงการ'], title: 'คุณอาจเข้าเกณฑ์โครงการสินเชื่อตามนโยบายรัฐ', body: () => 'ตรวจสอบคุณสมบัติเบื้องต้นได้ใน 1 นาที', cta: 'ตรวจสอบสิทธิ์', act: 'program' }
+  ];
+  function prepayHtml() {
+    const r = payoff(L.balance, L.rate, L.pay + st.extra);
+    const saveM = base.months - r.months, saveI = base.interest - r.interest;
+    return `<div class="muted" style="font-size:12.5px">โปะเพิ่ม <b style="color:var(--ink)" data-o="extra">${fmt(st.extra)}</b> บาท/เดือน</div>
+      <input type="range" min="0" max="10000" step="500" value="${st.extra}" data-extra aria-label="จำนวนเงินโปะเพิ่มต่อเดือน">
+      <div class="rows" data-o="res"><div class="row"><span class="muted">ผ่อนหมดเร็วขึ้น</span><b style="color:var(--ok)">${saveM > 0 ? ym(saveM) : '-'}</b></div><div class="row"><span class="muted">ประหยัดดอกเบี้ย</span><b style="color:var(--ok)">${fmt(Math.max(0, saveI))} บาท</b></div></div>`;
+  }
+  function render() {
+    const vis = CARDS.filter(c => !st.hidden.has(c.k) && st.cats[c.cat]);
+    el.innerHTML = `<div class="row" style="padding:0"><span><span class="muted" style="font-size:12.5px">สวัสดีตอนเช้า</span><br><b style="font-size:17px">คุณสมชาย</b></span><button class="btn btn-ghost btn-sm" data-settings aria-label="ตั้งค่าการแจ้งเตือน">${svg(IC.bell, 16)} ตั้งค่า</button></div>
+      <div class="card hcard"><div class="muted" style="font-size:12.5px">สินเชื่อบ้าน · ${L.no}</div><div class="row" style="padding:2px 0 0"><span class="big-val" style="color:#fff;font-size:22px">${fmt(L.balance)} ฿</span><span style="font-size:12.5px;text-align:right">ค่างวด<br><b>${fmt(L.pay)} ฿</b></span></div></div>
+      <div class="row" style="padding:0"><span class="sec-title" style="margin:0">คำแนะนำสำหรับคุณ</span><span class="fine">${vis.length} รายการ</span></div>
+      ${vis.length ? `<div class="carousel" id="f10-car">${vis.map(c => `<div class="card ins" data-card="${c.k}"><div class="row" style="padding:0"><span class="badge ${c.badge[0]}">${c.badge[1]}</span><button class="link-btn" style="color:var(--muted);font-weight:500" data-hide="${c.k}">ไม่สนใจ</button></div>
+          <div class="ttl">${c.title}</div>${c.k === 'prepay' ? prepayHtml() : `<div class="muted" style="font-size:12.5px">${c.body()}</div>`}
+          ${c.cta ? `<button class="btn btn-primary btn-sm" style="margin-top:auto" data-act="${c.act}">${c.cta}</button>` : ''}</div>`).join('')}</div>
+        <div class="dots" id="f10-dots">${vis.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>`
+        : '<div class="card empty">ไม่มีคำแนะนำใหม่ในตอนนี้</div>'}
+      ${st.hidden.size ? `<div class="fine center">ซ่อนแล้ว ${st.hidden.size} การ์ด · <button class="link-btn" data-restore>คืนค่า</button></div>` : ''}
+      <div class="card"><b>ทางลัด</b><div class="svc-grid" style="margin-top:8px"><a class="svc" href="#f6" style="text-decoration:none"><span class="ic">${svg(IC.acct)}</span>จ่ายค่างวด</a><a class="svc" href="#f3" style="text-decoration:none"><span class="ic">${svg(IC.doc)}</span>เอกสาร</a><a class="svc" href="#f2" style="text-decoration:none"><span class="ic">${svg(IC.house)}</span>หาบ้าน</a><a class="svc" href="#f9" style="text-decoration:none"><span class="ic">${svg(IC.svc)}</span>ดูแลบ้าน</a></div></div>`;
+    const car = $('#f10-car', el);
+    if (car) car.addEventListener('scroll', () => {
+      const w = car.firstElementChild.offsetWidth + 10, i = Math.round(car.scrollLeft / w);
+      $$('#f10-dots i', el).forEach((d, j) => d.classList.toggle('on', j === i));
+    }, { passive: true });
+  }
+  el.addEventListener('input', e => {
+    if (!e.target.matches('[data-extra]')) return;
+    st.extra = +e.target.value;
+    const card = e.target.closest('.ins'), tmp = document.createElement('div'); tmp.innerHTML = prepayHtml();
+    $('[data-o="extra"]', card).textContent = fmt(st.extra);
+    $('[data-o="res"]', card).replaceWith($('[data-o="res"]', tmp));
+  });
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.hide) { st.hidden.add(b.dataset.hide); render(); toast('f10', 'ซ่อนการ์ดแล้ว เราจะแนะนำเรื่องนี้น้อยลง'); }
+    else if (b.hasAttribute('data-restore')) { st.hidden.clear(); render(); }
+    else if (b.hasAttribute('data-settings')) settings();
+    else if (b.dataset.act === 'docs') document.getElementById('f3').scrollIntoView({ behavior: 'smooth' });
+    else if (b.dataset.act === 'offer') sheet('f10', `<h5>ข้อเสนอลดดอกเบี้ย (ตัวอย่าง)</h5><div class="stack">
+        <div class="opt"><div class="row" style="padding:0"><b>คงที่ 3 ปี</b><b>${fmt(L.rate - 0.4, 2)}%</b></div><span class="fine">ค่างวดใหม่ ≈ ${fmt(pmt(L.balance, L.rate - 0.4, L.monthsLeft))} บาท</span></div>
+        <div class="opt"><div class="row" style="padding:0"><b>คงที่ 1 ปี แล้วลอยตัว</b><b>${fmt(L.rate - 0.6, 2)}%</b></div><span class="fine">ค่างวดใหม่ ≈ ${fmt(pmt(L.balance, L.rate - 0.6, L.monthsLeft))} บาท</span></div></div>
+        <p class="fine">อัตราเป็นตัวอย่างในต้นแบบ ไม่ใช่ข้อเสนอจริง</p><button class="btn btn-primary btn-block" data-close>ขอให้เจ้าหน้าที่ติดต่อกลับ</button>`);
+    else if (b.dataset.act === 'program') {
+      const o = sheet('f10', `<h5>ตรวจสอบคุณสมบัติเบื้องต้น</h5><div class="stack">${['มีสัญชาติไทย', 'ยังไม่เคยมีบ้านเป็นของตัวเอง', 'รายได้ต่อเดือนไม่เกินเกณฑ์ของโครงการ', 'ราคาบ้านไม่เกินเกณฑ์ของโครงการ'].map((c, i) => `<label class="check"><input type="checkbox" data-c="${i}"> ${c}</label>`).join('')}</div>
+        <div id="f10-res"></div><button class="btn btn-primary btn-block" data-check>ตรวจสอบ</button>`);
+      o.addEventListener('click', ev => {
+        if (!ev.target.closest('[data-check]')) return;
+        const n = $$('[data-c]:checked', o).length;
+        $('#f10-res', o).innerHTML = n === 4 ? '<div class="alert alert-ok">คุณน่าจะเข้าเกณฑ์ เจ้าหน้าที่จะตรวจสอบเอกสารอีกครั้ง</div>' : `<div class="alert alert-warn">ยังขาดคุณสมบัติ ${4 - n} ข้อ ลองดูโครงการอื่นที่เหมาะกับคุณ</div>`;
+      });
+    }
+  });
+  function settings() {
+    const o = sheet('f10', `<h5>ตั้งค่าการแจ้งเตือน</h5>
+      ${[['loan', 'ดอกเบี้ยและสินเชื่อ'], ['tax', 'ภาษีและเอกสาร'], ['promo', 'โครงการและข้อเสนอ']].map(([k, l]) => `<label class="row"><span>${l}</span><span class="switch"><input type="checkbox" data-cat="${k}" ${st.cats[k] ? 'checked' : ''}><span></span></span></label>`).join('')}
+      <span class="lbl">ความถี่</span><div class="seg"><button data-f="now" class="${st.freq === 'now' ? 'on' : ''}">ทันที</button><button data-f="week" class="${st.freq === 'week' ? 'on' : ''}">สรุปรายสัปดาห์</button></div>
+      <button class="btn btn-primary btn-block" data-close>เสร็จสิ้น</button>`);
+    o.addEventListener('change', e => { const k = e.target.dataset.cat; if (k) { st.cats[k] = e.target.checked; render(); } });
+    o.addEventListener('click', e => { const f = e.target.closest('[data-f]'); if (f) { st.freq = f.dataset.f; $$('[data-f]', o).forEach(x => x.classList.toggle('on', x === f)); } });
+  }
+  render();
+}
+
+/* =========================================================
+   Render page
+   ========================================================= */
+const DEMOS = { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10 };
+(function init() {
+  $('#indexChips').innerHTML = FEATURES.map((f, i) => `<a href="#${f.id}"><b>${i + 1}</b>${esc(f.title.replace(/\s*\(.*\)$/, ''))}</a>`).join('');
+  $('#featureList').innerHTML = FEATURES.map((f, i) => `<article class="feature" id="${f.id}">
+    <div>
+      <span class="f-num">${i + 1}</span>
+      <h3>${esc(f.title)}</h3>
+      <div class="f-sub" style="margin-top:0">ตำแหน่งในแอป</div>
+      <div class="crumb">${f.where.map(w => `<span>${esc(w)}</span>`).join('<i>›</i>')}</div>
+      ${f.note ? `<p class="where-note">${esc(f.note)}</p>` : '<p class="where-note"></p>'}
+      <div class="f-sub">ฟังก์ชัน</div><p class="f-desc">${esc(f.desc)}</p>
+      <div class="f-sub">หลักการ UX/UI</div><ul class="ux-list">${f.ux.map(u => `<li>${esc(u)}</li>`).join('')}</ul>
+      <div class="f-sub">ตัวชี้วัดความสำเร็จ</div><div class="kpi">${f.kpi.map(k => `<span>${esc(k)}</span>`).join('')}</div>
+      <p class="try">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>', 18)}<span><b>ลองใช้:</b> ${esc(f.tryit)}</span></p>
+    </div>
+    ${phoneShell(f.id, f.app, f.tab)}
+  </article>`).join('');
+  FEATURES.forEach(f => { try { DEMOS[f.id]($('#app-' + f.id)); } catch (err) { console.error(f.id, err); } });
+  const btn = $('#menuBtn'), nav = $('#mainNav');
+  btn.addEventListener('click', () => { const o = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
+  $$('#mainNav a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }));
+})();
+</script>
+</body>
+</html>
